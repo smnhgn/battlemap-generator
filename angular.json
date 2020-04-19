@@ -7,7 +7,15 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true,
+          "changeDetection": "OnPush"
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
         }
       },
       "root": "",
@@ -123,6 +131,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "battlemap-generator"
 }
