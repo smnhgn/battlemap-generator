@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { GeneratorComponent } from './generator/generator.component';
 import { DropzoneComponent } from './dropzone/dropzone.component';
 import { FileDropDirective } from '../directives/file-drop.directive';
+import { FileListComponent } from './file-list/file-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GeneratorComponent,
     DropzoneComponent,
-    FileDropDirective
+    FileDropDirective,
+    FileListComponent
   ],
   imports: [
     BrowserModule,

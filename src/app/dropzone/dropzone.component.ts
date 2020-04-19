@@ -13,7 +13,7 @@ export class DropzoneComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  fileDropped(event) {
-    this.drop.files.push(event);
+  fileDropped(file: File) {
+    this.drop.addFile(file);
   }
 }
