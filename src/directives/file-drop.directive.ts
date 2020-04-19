@@ -15,24 +15,24 @@ export class FileDropDirective {
 
   @Output() onFileDropped = new EventEmitter<any>();
 
-  @HostBinding('style.border') private border = '2px dashed cornflowerblue';
-  @HostBinding('style.color') private color = 'cornflowerblue';
-  @HostBinding('style.border-radius') private borderRadius = '5px';
+  // @HostBinding('style.border') private border = '2px dashed cornflowerblue';
+  // @HostBinding('style.color') private color = 'cornflowerblue';
+  // @HostBinding('style.border-radius') private borderRadius = '5px';
   @HostBinding('style.opacity') private opacity = '1';
 
   //Dragover listener
   @HostListener('dragover', ['$event']) onDragOver(evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    this.border = '2px solid cornflowerblue';
-    this.opacity = '0.8';
+    // this.border = '2px solid cornflowerblue';
+    this.opacity = '0.6';
   }
 
   //Dragleave listener
   @HostListener('dragleave', ['$event']) public onDragLeave(evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    this.border = '2px dashed cornflowerblue';
+    // this.border = '2px dashed cornflowerblue';
     this.opacity = '1';
   }
 
@@ -40,7 +40,7 @@ export class FileDropDirective {
   @HostListener('drop', ['$event']) public ondrop(evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    this.border = '2px dashed cornflowerblue';
+    // this.border = '2px dashed cornflowerblue';
     this.opacity = '1';
     // let files = evt.dataTransfer.files;
     // console.log(evt, files);

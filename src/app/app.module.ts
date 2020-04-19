@@ -8,6 +8,8 @@ import { FileDropDirective } from '../directives/file-drop.directive';
 import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
 import { LayerComponent } from './layer/layer.component';
+import { SettingsComponent } from './settings/settings.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -17,8 +19,9 @@ import { LayerComponent } from './layer/layer.component';
     FileListComponent,
     MapComponent,
     LayerComponent,
+    SettingsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
