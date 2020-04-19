@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { DropService } from 'src/services/drop.service';
 
 @Component({
   selector: 'app-dropzone',
   templateUrl: './dropzone.component.html',
-  styleUrls: ['./dropzone.component.scss']
+  styleUrls: ['./dropzone.component.scss'],
 })
 export class DropzoneComponent implements OnInit {
   active = false;
 
-  constructor() { }
+  constructor(private drop: DropService) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   fileDropped(event) {
-    console.log(event);
+    this.drop.files.push(event);
   }
-
 }
