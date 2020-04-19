@@ -1,1 +1,3 @@
-<canvas id="canvas"></canvas>
+<ng-container *ngFor="let file of fileList">
+  <app-layer [file]="file" [width]="width" [height]="height"></app-layer>
+</ng-container>

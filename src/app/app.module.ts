@@ -7,6 +7,7 @@ import { GeneratorComponent } from './generator/generator.component';
 import { FileDropDirective } from '../directives/file-drop.directive';
 import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
+import { LayerComponent } from './layer/layer.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { MapComponent } from './map/map.component';
     FileDropDirective,
     FileListComponent,
     MapComponent,
+    LayerComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
