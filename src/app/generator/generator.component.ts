@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { DropService } from 'src/services/drop.service';
 
 @Component({
   selector: 'app-generator',
   templateUrl: './generator.component.html',
-  styleUrls: ['./generator.component.scss']
+  styleUrls: ['./generator.component.scss'],
 })
 export class GeneratorComponent implements OnInit {
+  constructor(private drop: DropService) {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  fileDropped(file: File) {
+    this.drop.addFile(file);
   }
-
 }

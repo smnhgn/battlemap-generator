@@ -1,0 +1,20 @@
+.dropzone {
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    "dropzone map"
+    "filelist map";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+}
+
+app-dropzone {
+  grid-area: dropzone;
+}
+app-filelist {
+  grid-area: filelist;
+}
+app-map {
+  grid-area: map;
+}

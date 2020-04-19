@@ -1,2 +1,5 @@
-<app-dropzone></app-dropzone>
-<app-file-list></app-file-list>
+<div class="dropzone" appFileDrop (onFileDropped)="fileDropped($event)">
+  <app-file-list></app-file-list>
+  <app-map></app-map>
+</div>
+<!-- <app-dropzone> </app-dropzone> -->

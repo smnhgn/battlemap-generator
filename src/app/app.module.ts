@@ -4,23 +4,20 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GeneratorComponent } from './generator/generator.component';
-import { DropzoneComponent } from './dropzone/dropzone.component';
 import { FileDropDirective } from '../directives/file-drop.directive';
 import { FileListComponent } from './file-list/file-list.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GeneratorComponent,
-    DropzoneComponent,
     FileDropDirective,
-    FileListComponent
+    FileListComponent,
+    MapComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
