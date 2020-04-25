@@ -26,6 +26,7 @@ import { LayerComponent } from './layer/layer.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatListModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
