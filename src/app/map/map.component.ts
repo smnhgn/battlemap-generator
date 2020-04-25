@@ -35,7 +35,7 @@ export class MapComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.layer.changes.pipe(debounceTime(100)).subscribe(() => this.update());
+    this.layer.changes.pipe(debounceTime(300)).subscribe(() => this.update());
   }
 
   dragEnd(event: CdkDragEnd) {

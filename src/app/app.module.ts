@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,6 +36,7 @@ import { LayerComponent } from './layer/layer.component';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

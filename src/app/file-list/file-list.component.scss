@@ -1,16 +1,23 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
 .file-list {
   max-width: 100%;
-  overflow: hidden;
+  display: block;
+  height: 100%;
+  overflow: auto;
 }
 
 .file-item {
   color: #fff;
   padding: 20px 10px;
   border-bottom: solid 1px #ccc;
-  display: flex;
-  flex-direction: row;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr auto;
   background-color: #303030;
   font-size: 14px;
 }
