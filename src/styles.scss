@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import "@angular/material/prebuilt-themes/purple-green.css";
+@import "~@angular/material/theming";
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: "Montserrat, monospace",
+);
+@include angular-material-typography($custom-typography);
 
 html,
 body {
@@ -7,7 +15,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Montserrat, "Helvetica Neue", sans-serif;
 }
 
 .dropzone {
