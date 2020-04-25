@@ -1,12 +1,10 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   ElementRef,
   ViewChild,
   Input,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 
 @Component({
@@ -17,23 +15,33 @@ import {
 })
 export class LayerComponent implements AfterViewInit {
   @Input() file: File;
-  @Input() width: number;
-  @Input() height: number;
+  width: number;
+  height: number;
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d');
-    const img = new Image();
-    img.onload = () => {
-      this.ctx.drawImage(img, 0, 0);
-      this.cd.detectChanges();
+
+    const fr = new FileReader();
+    fr.onload = () => {
+      // file is loaded
+      const img = new Image();
+      img.onload = () => {
+        // image is loaded; sizes are available
+        const scale = 0.25;
+        this.canvas.nativeElement.width = img.width * scale;
+        this.canvas.nativeElement.height = img.height * scale;
+        this.ctx.scale(scale, scale);
+        this.ctx.drawImage(img, 0, 0);
+      };
+      img.src = fr.result as string; // is the data URL because called with readAsDataURL
     };
-    img.src = URL.createObjectURL(this.file);
+    fr.readAsDataURL(this.file);
   }
 }
