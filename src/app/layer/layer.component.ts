@@ -6,6 +6,7 @@ import {
   Input,
   AfterViewInit,
 } from '@angular/core';
+import { loadImage } from 'src/utils/file.utils';
 
 @Component({
   selector: 'app-layer',
@@ -15,33 +16,23 @@ import {
 })
 export class LayerComponent implements AfterViewInit {
   @Input() file: File;
-  width: number;
-  height: number;
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
+  scale: number;
+  img: HTMLImageElement;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    this.scale = 0.25;
+    this.img = await loadImage(URL.createObjectURL(this.file));
+    this.canvas.nativeElement.width = this.img.width * this.scale;
+    this.canvas.nativeElement.height = this.img.height * this.scale;
     this.ctx = this.canvas.nativeElement.getContext('2d');
-
-    const fr = new FileReader();
-    fr.onload = () => {
-      // file is loaded
-      const img = new Image();
-      img.onload = () => {
-        // image is loaded; sizes are available
-        const scale = 0.25;
-        this.canvas.nativeElement.width = img.width * scale;
-        this.canvas.nativeElement.height = img.height * scale;
-        this.ctx.scale(scale, scale);
-        this.ctx.drawImage(img, 0, 0);
-      };
-      img.src = fr.result as string; // is the data URL because called with readAsDataURL
-    };
-    fr.readAsDataURL(this.file);
+    this.ctx.scale(this.scale, this.scale);
+    this.ctx.drawImage(this.img, 0.5, 0.5);
   }
 }
