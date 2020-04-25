@@ -2,12 +2,10 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { DropService } from 'src/services/drop.service';
-import { Subject, Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { DropService } from '../../services/drop.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-file-list',
@@ -16,14 +14,11 @@ import { debounceTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListComponent implements OnInit {
-  fileList: File[];
+  fileList$: Observable<File[]>;
 
   constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.drop.fileList$.subscribe((fileList) => {
-      this.fileList = fileList;
-      this.cd.detectChanges();
-    });
+    this.fileList$ = this.drop.fileList$;
   }
 }

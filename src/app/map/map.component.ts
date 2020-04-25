@@ -1,13 +1,6 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ViewChild,
-  AfterViewInit,
-  ElementRef,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { DropService } from 'src/services/drop.service';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { DropService } from '../../services/drop.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -15,19 +8,12 @@ import { DropService } from 'src/services/drop.service';
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements OnInit, AfterViewInit {
-  width = 2550;
-  height = 3300;
-  fileList: File[] = [];
+export class MapComponent implements OnInit {
+  fileList$: Observable<File[]>;
 
-  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
+  constructor(private drop: DropService) {}
 
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    this.drop.fileList$.subscribe((fileList) => {
-      this.fileList = fileList;
-      this.cd.detectChanges();
-    });
+  ngOnInit(): void {
+    this.fileList$ = this.drop.fileList$;
   }
 }

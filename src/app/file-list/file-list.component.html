@@ -1,3 +1,5 @@
 <mat-list dense>
-  <mat-list-item *ngFor="let file of fileList">{{ file.name }}</mat-list-item>
+  <mat-list-item *ngFor="let file of fileList$ | async">
+    {{ file.name }}
+  </mat-list-item>
 </mat-list>

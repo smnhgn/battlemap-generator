@@ -1,4 +1,10 @@
-<div class="dropzone" appFileDrop (onFileDropped)="fileDropped($event)">
-  <app-file-list></app-file-list>
-  <app-map class="boundary"></app-map>
-</div>
+<ngx-file-drop
+  dropZoneClassName="dropzone"
+  contentClassName="dropzone-content"
+  (onFileDrop)="dropped($event)"
+>
+  <ng-template ngx-file-drop-content-tmp>
+    <app-file-list></app-file-list>
+    <app-map class="boundary"></app-map>
+  </ng-template>
+</ngx-file-drop>

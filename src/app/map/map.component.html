@@ -1,3 +1,3 @@
-<ng-container *ngFor="let file of fileList">
+<ng-container *ngFor="let file of fileList$ | async">
   <app-layer [file]="file" cdkDragBoundary=".boundary" cdkDrag></app-layer>
 </ng-container>
