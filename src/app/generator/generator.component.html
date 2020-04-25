@@ -1,32 +1,47 @@
-<mat-drawer-container class="drawer-container">
-  <mat-drawer mode="side" opened>
-    <div class="drawer">
-      <div class="file-list-container">
-        <app-file-list [fileList]="fileList"></app-file-list>
-      </div>
-      <button
-        mat-flat-button
-        class="export-button"
-        (click)="export()"
-        color="primary"
-        [disabled]="fileList?.length === 0"
-      >
-        Export
-      </button>
-    </div>
-  </mat-drawer>
-  <mat-drawer-content>
-    <ngx-file-drop
-      dropZoneClassName="dropzone"
-      contentClassName="dropzone-content"
-      (onFileDrop)="dropped($event)"
-    >
-      <ng-template ngx-file-drop-content-tmp>
+<ngx-file-drop
+  dropZoneClassName="dropzone"
+  contentClassName="dropzone-content"
+  (onFileDrop)="dropped($event)"
+  accept="image/*"
+>
+  <ng-template
+    ngx-file-drop-content-tmp
+    let-openFileSelector="openFileSelector"
+  >
+    <mat-drawer-container class="drawer-container">
+      <mat-drawer mode="side" opened>
+        <div class="drawer">
+          <div class="file-list-container">
+            <app-file-list [fileList]="fileList"></app-file-list>
+          </div>
+          <button
+            mat-flat-button
+            (click)="openFileSelector()"
+            class="button"
+            color="primary"
+          >
+            Browse Files
+          </button>
+          <button
+            mat-flat-button
+            class="button"
+            (click)="export()"
+            color="primary"
+            [disabled]="fileList?.length === 0"
+          >
+            Export
+          </button>
+        </div>
+      </mat-drawer>
+      <mat-drawer-content>
         <div class="drop-overlay" *ngIf="fileList?.length === 0">
-          Drop Images Here
+          <h1>Drop Images Here</h1>
+          <button mat-flat-button (click)="openFileSelector()" color="primary">
+            Browse Files
+          </button>
         </div>
         <app-map class="boundary" [fileList]="fileList" #map></app-map>
-      </ng-template>
-    </ngx-file-drop>
-  </mat-drawer-content>
-</mat-drawer-container>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </ng-template>
+</ngx-file-drop>
