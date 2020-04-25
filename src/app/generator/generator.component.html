@@ -15,7 +15,7 @@
             class="export-button"
             (click)="map.export()"
             color="primary"
-            [disabled]="fileList.length === 0"
+            [disabled]="fileList?.length === 0"
           >
             Export
           </button>
