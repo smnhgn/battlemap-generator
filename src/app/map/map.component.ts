@@ -1,6 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
 import { DropService } from '../../services/drop.service';
-import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-map',
@@ -9,11 +19,60 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent implements OnInit {
-  fileList$: Observable<File[]>;
+  fileList: File[];
+  @ViewChildren('layer', { read: CdkDrag })
+  layer: QueryList<CdkDrag>;
+  @ViewChild('exportCanvas', { static: true })
+  exportCanvas: ElementRef<HTMLCanvasElement>;
+  exportCtx: CanvasRenderingContext2D;
+  scale = 0.25;
 
-  constructor(private drop: DropService) {}
+  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.fileList$ = this.drop.fileList$;
+    this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
+    this.drop.fileList$.subscribe((fileList) => {
+      this.fileList = fileList;
+      this.cd.markForCheck();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.layer.changes.pipe(debounceTime(100)).subscribe(() => this.update());
+  }
+
+  dragEnd(event: CdkDragEnd) {
+    this.update();
+  }
+
+  update() {
+    const { width, height } = this.layer.reduce(
+      (size, layer) => {
+        let { x, y } = layer.getFreeDragPosition();
+        x = x / this.scale;
+        y = y / this.scale;
+        const { width, height } = layer.data.img;
+        if (width + x > size.width) {
+          size.width = width + x;
+        }
+        if (height + y > size.height) {
+          size.height = height + y;
+        }
+        return size;
+      },
+      { width: 0, height: 0 }
+    );
+    this.exportCanvas.nativeElement.width = width;
+    this.exportCanvas.nativeElement.height = height;
+    this.exportCtx.clearRect(
+      0,
+      0,
+      this.exportCanvas.nativeElement.width,
+      this.exportCanvas.nativeElement.height
+    );
+    this.layer.forEach((layer) => {
+      const { x, y } = layer.getFreeDragPosition();
+      this.exportCtx.drawImage(layer.data.img, x / this.scale, y / this.scale);
+    });
   }
 }

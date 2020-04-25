@@ -16,16 +16,15 @@ import { loadImage } from 'src/utils/file.utils';
 })
 export class LayerComponent implements OnInit {
   @Input() file: File;
+  @Input() scale: number;
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
-  scale: number;
   img: HTMLImageElement;
 
   constructor() {}
 
   async ngOnInit() {
-    this.scale = 0.25;
     this.img = await loadImage(URL.createObjectURL(this.file));
     this.canvas.nativeElement.width = this.img.width * this.scale;
     this.canvas.nativeElement.height = this.img.height * this.scale;
