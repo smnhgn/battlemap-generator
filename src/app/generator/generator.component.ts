@@ -3,6 +3,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import { DropService } from '../../services/drop.service';
 import {
@@ -10,6 +11,7 @@ import {
   FileSystemFileEntry,
   FileSystemDirectoryEntry,
 } from 'ngx-file-drop';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-generator',
@@ -19,6 +21,7 @@ import {
 })
 export class GeneratorComponent implements OnInit {
   fileList: File[];
+  @ViewChild('map', { read: MapComponent }) map: MapComponent;
 
   constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
 
@@ -44,5 +47,9 @@ export class GeneratorComponent implements OnInit {
         console.log(droppedFile.relativePath, fileEntry);
       }
     }
+  }
+
+  export() {
+    this.map.export();
   }
 }

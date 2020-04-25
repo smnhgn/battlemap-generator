@@ -1,29 +1,32 @@
-<ngx-file-drop
-  dropZoneClassName="dropzone"
-  contentClassName="dropzone-content"
-  (onFileDrop)="dropped($event)"
->
-  <ng-template ngx-file-drop-content-tmp>
-    <mat-drawer-container class="drawer-container">
-      <mat-drawer mode="side" opened>
-        <div class="drawer">
-          <div class="file-list-container">
-            <app-file-list [fileList]="fileList"></app-file-list>
-          </div>
-          <button
-            mat-flat-button
-            class="export-button"
-            (click)="map.export()"
-            color="primary"
-            [disabled]="fileList?.length === 0"
-          >
-            Export
-          </button>
+<mat-drawer-container class="drawer-container">
+  <mat-drawer mode="side" opened>
+    <div class="drawer">
+      <div class="file-list-container">
+        <app-file-list [fileList]="fileList"></app-file-list>
+      </div>
+      <button
+        mat-flat-button
+        class="export-button"
+        (click)="export()"
+        color="primary"
+        [disabled]="fileList?.length === 0"
+      >
+        Export
+      </button>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ngx-file-drop
+      dropZoneClassName="dropzone"
+      contentClassName="dropzone-content"
+      (onFileDrop)="dropped($event)"
+    >
+      <ng-template ngx-file-drop-content-tmp>
+        <div class="drop-overlay" *ngIf="fileList?.length === 0">
+          Drop Images Here
         </div>
-      </mat-drawer>
-      <mat-drawer-content>
         <app-map class="boundary" [fileList]="fileList" #map></app-map>
-      </mat-drawer-content>
-    </mat-drawer-container>
-  </ng-template>
-</ngx-file-drop>
+      </ng-template>
+    </ngx-file-drop>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,21 +1,17 @@
 .file-list {
   max-width: 100%;
-  // border-bottom: solid 1px #ccc;
-  display: block;
-  background: white;
   overflow: hidden;
 }
 
 .file-item {
+  color: #fff;
   padding: 20px 10px;
   border-bottom: solid 1px #ccc;
-  color: rgba(0, 0, 0, 0.87);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
-  background: white;
+  background-color: #303030;
   font-size: 14px;
 }
 
