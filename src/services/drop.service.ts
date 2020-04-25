@@ -16,6 +16,10 @@ export class DropService {
   addFile(file: File) {
     const fileList = this.fileListSubject.value;
     fileList.push(file);
+    this.updateList(fileList);
+  }
+
+  updateList(fileList: File[]) {
     this.fileListSubject.next(fileList);
   }
 }
