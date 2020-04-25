@@ -5,6 +5,7 @@ body {
   height: 100%;
 }
 body {
+  background: lightgrey;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
@@ -15,21 +16,17 @@ body {
 
 .dropzone-content {
   height: 100%;
-  display: grid;
-  grid-template-areas:
-    "filelist map"
-    "filelist map";
-  grid-template-columns: auto 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 10px;
-
-  app-settings {
-    grid-area: settings;
-  }
-  app-filelist {
-    grid-area: filelist;
-  }
-  app-map {
-    grid-area: map;
-  }
 }
+//   display: grid;
+//   grid-template-areas: "aside main";
+//   grid-template-columns: 200px 1fr;
+//   grid-template-rows: 1fr;
+
+//   aside {
+//     grid-area: aside;
+//   }
+
+//   main {
+//     grid-area: main;
+//   }
+// }

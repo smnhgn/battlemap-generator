@@ -4,7 +4,13 @@
   (onFileDrop)="dropped($event)"
 >
   <ng-template ngx-file-drop-content-tmp>
-    <app-file-list></app-file-list>
-    <app-map class="boundary"></app-map>
+    <mat-drawer-container class="drawer-container">
+      <mat-drawer mode="side" opened>
+        <app-file-list></app-file-list>
+      </mat-drawer>
+      <mat-drawer-content>
+        <app-map class="boundary"></app-map>
+      </mat-drawer-content>
+    </mat-drawer-container>
   </ng-template>
 </ngx-file-drop>

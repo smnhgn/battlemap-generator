@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatListModule } from '@angular/material/list';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,6 +28,7 @@ import { LayerComponent } from './layer/layer.component';
     MatListModule,
     NgxFileDropModule,
     DragDropModule,
+    MatSidenavModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

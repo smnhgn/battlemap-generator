@@ -4,7 +4,7 @@ import {
   ElementRef,
   ViewChild,
   Input,
-  AfterViewInit,
+  OnInit,
 } from '@angular/core';
 import { loadImage } from 'src/utils/file.utils';
 
@@ -14,7 +14,7 @@ import { loadImage } from 'src/utils/file.utils';
   styleUrls: ['./layer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayerComponent implements AfterViewInit {
+export class LayerComponent implements OnInit {
   @Input() file: File;
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
@@ -24,15 +24,13 @@ export class LayerComponent implements AfterViewInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
-
-  async ngAfterViewInit() {
+  async ngOnInit() {
     this.scale = 0.25;
     this.img = await loadImage(URL.createObjectURL(this.file));
     this.canvas.nativeElement.width = this.img.width * this.scale;
     this.canvas.nativeElement.height = this.img.height * this.scale;
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.ctx.scale(this.scale, this.scale);
-    this.ctx.drawImage(this.img, 0.5, 0.5);
+    this.ctx.drawImage(this.img, 0, 0);
   }
 }
