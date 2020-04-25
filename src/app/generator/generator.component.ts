@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { DropService } from '../../services/drop.service';
 import {
   NgxFileDropEntry,
@@ -13,9 +18,17 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneratorComponent implements OnInit {
-  constructor(private drop: DropService) {}
+  fileList: File[];
 
-  ngOnInit(): void {}
+  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.drop.fileList$.subscribe((fileList) => {
+      // copy array for change-detection
+      this.fileList = [...fileList];
+      this.cd.markForCheck();
+    });
+  }
 
   dropped(files: NgxFileDropEntry[]) {
     for (const droppedFile of files) {

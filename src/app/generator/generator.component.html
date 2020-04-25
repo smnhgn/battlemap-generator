@@ -6,10 +6,23 @@
   <ng-template ngx-file-drop-content-tmp>
     <mat-drawer-container class="drawer-container">
       <mat-drawer mode="side" opened>
-        <app-file-list></app-file-list>
+        <div class="drawer">
+          <div class="file-list-container">
+            <app-file-list [fileList]="fileList"></app-file-list>
+          </div>
+          <button
+            mat-flat-button
+            class="export-button"
+            (click)="map.export()"
+            color="primary"
+            [disabled]="fileList.length === 0"
+          >
+            Export
+          </button>
+        </div>
       </mat-drawer>
       <mat-drawer-content>
-        <app-map class="boundary"></app-map>
+        <app-map class="boundary" [fileList]="fileList" #map></app-map>
       </mat-drawer-content>
     </mat-drawer-container>
   </ng-template>

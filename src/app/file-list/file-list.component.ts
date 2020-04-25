@@ -2,10 +2,9 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { DropService } from '../../services/drop.service';
-import { Observable } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -15,16 +14,11 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListComponent implements OnInit {
-  fileList: File[];
+  @Input() fileList: File[];
 
-  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
+  constructor(private drop: DropService) {}
 
-  ngOnInit(): void {
-    this.drop.fileList$.subscribe((fileList) => {
-      this.fileList = fileList;
-      this.cd.markForCheck();
-    });
-  }
+  ngOnInit(): void {}
 
   dropped(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.fileList, event.previousIndex, event.currentIndex);

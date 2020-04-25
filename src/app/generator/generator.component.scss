@@ -1,3 +1,20 @@
 .drawer-container {
   height: 100%;
 }
+
+.drawer {
+  height: 100%;
+  min-width: 150px;
+  display: grid;
+  align-items: center;
+  grid-template-rows: 1fr auto;
+}
+
+.file-list-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.export-button {
+  border-radius: 0px;
+}

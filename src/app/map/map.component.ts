@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   ViewChildren,
   QueryList,
+  Input,
 } from '@angular/core';
 import { DropService } from '../../services/drop.service';
 import { debounceTime } from 'rxjs/operators';
@@ -19,7 +20,7 @@ import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent implements OnInit {
-  fileList: File[];
+  @Input() fileList: File[];
   @ViewChildren('layer', { read: CdkDrag })
   layer: QueryList<CdkDrag>;
   @ViewChild('exportCanvas', { static: true })
@@ -27,14 +28,10 @@ export class MapComponent implements OnInit {
   exportCtx: CanvasRenderingContext2D;
   scale = 0.25;
 
-  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
-    this.drop.fileList$.subscribe((fileList) => {
-      this.fileList = fileList;
-      this.cd.markForCheck();
-    });
   }
 
   ngAfterViewInit(): void {
@@ -74,5 +71,13 @@ export class MapComponent implements OnInit {
       const { x, y } = layer.getFreeDragPosition();
       this.exportCtx.drawImage(layer.data.img, x / this.scale, y / this.scale);
     });
+  }
+
+  export() {
+    const link = document.createElement('a');
+    link.download = 'battlemap.png';
+    link.href = this.exportCanvas.nativeElement.toDataURL();
+    link.click();
+    link.remove();
   }
 }
