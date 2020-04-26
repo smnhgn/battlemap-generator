@@ -6,6 +6,7 @@ import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 
 import { MatListModule } from '@angular/material/list';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +36,7 @@ import { NgxMoveableModule } from 'ngx-moveable';
     BrowserAnimationsModule,
     MatListModule,
     NgxFileDropModule,
+    DragDropModule,
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
