@@ -24,6 +24,7 @@
     "@angular/router": "~9.1.1",
     "firebase": "^7.14.2",
     "ngx-file-drop": "^9.0.1",
+    "ngx-moveable": "^0.12.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

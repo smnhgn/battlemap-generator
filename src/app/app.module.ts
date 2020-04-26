@@ -6,7 +6,6 @@ import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 
 import { MatListModule } from '@angular/material/list';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +19,7 @@ import { GeneratorComponent } from './generator/generator.component';
 import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
 import { FormsModule } from '@angular/forms';
+import { NgxMoveableModule } from 'ngx-moveable';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,6 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MatListModule,
     NgxFileDropModule,
-    DragDropModule,
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
@@ -43,6 +42,7 @@ import { FormsModule } from '@angular/forms';
     MatSliderModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAnalyticsModule,
+    NgxMoveableModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,11 +1,17 @@
 export interface Layer {
   name: string;
   img: HTMLImageElement;
-  scale: number;
+  x: number;
+  y: number;
+  scale: number[];
+  rotate: number;
 }
 
 export const defaultLayer = {
   name: 'Layer',
   img: null,
-  scale: 1,
+  x: 0,
+  y: 0,
+  scale: [1, 1],
+  rotate: 0,
 };
