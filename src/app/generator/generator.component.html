@@ -12,7 +12,7 @@
       <mat-drawer mode="side" opened>
         <div class="drawer">
           <div class="file-list-container">
-            <app-file-list [fileList]="fileList"></app-file-list>
+            <app-file-list [layerList]="layerList"></app-file-list>
           </div>
           <button
             mat-flat-button
@@ -27,20 +27,20 @@
             class="button"
             (click)="export()"
             color="primary"
-            [disabled]="fileList?.length === 0"
+            [disabled]="layerList?.length === 0"
           >
             Export
           </button>
         </div>
       </mat-drawer>
       <mat-drawer-content>
-        <div class="drop-overlay" *ngIf="fileList?.length === 0">
+        <div class="drop-overlay" *ngIf="layerList?.length === 0">
           <h1>Drop Images Here</h1>
           <button mat-flat-button (click)="openFileSelector()" color="primary">
             Browse Files
           </button>
         </div>
-        <app-map class="boundary" [fileList]="fileList" #map></app-map>
+        <app-map class="boundary" [layerList]="layerList" #map></app-map>
       </mat-drawer-content>
     </mat-drawer-container>
   </ng-template>

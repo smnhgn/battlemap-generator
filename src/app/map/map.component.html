@@ -1,12 +1,12 @@
-<ng-container *ngFor="let file of fileList">
+<ng-container *ngFor="let layer of layerList">
   <app-layer
-    [file]="file"
-    [scale]="scale"
+    [file]="layer.file"
+    [scale]="layer.scale"
     cdkDragBoundary=".boundary"
     cdkDrag
     (cdkDragEnded)="dragEnd($event)"
-    [cdkDragData]="layer"
-    #layer
+    [cdkDragData]="layerComponent"
+    #layerComponent
   ></app-layer>
 </ng-container>
 <canvas style="display: none; position: absolute;" #exportCanvas></canvas>

@@ -12,6 +12,7 @@ import {
 import { DropService } from '../../services/drop.service';
 import { debounceTime } from 'rxjs/operators';
 import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
+import { Layer } from '../../models/layer.model';
 
 @Component({
   selector: 'app-map',
@@ -20,7 +21,7 @@ import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent implements OnInit {
-  @Input() fileList: File[];
+  @Input() layerList: Layer[];
   @ViewChildren('layer', { read: CdkDrag })
   layer: QueryList<CdkDrag>;
   @ViewChild('exportCanvas', { static: true })

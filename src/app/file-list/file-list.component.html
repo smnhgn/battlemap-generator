@@ -4,8 +4,8 @@
   [cdkDropListAutoScrollDisabled]="false"
   (cdkDropListDropped)="dropped($event)"
 >
-  <div *ngFor="let file of fileList" class="file-item" cdkDrag>
-    <span>{{ file.name }}</span>
+  <div *ngFor="let layer of layerList" class="file-item" cdkDrag>
+    <span>{{ layer.file.name }}</span>
     <mat-icon class="drag-handle" cdkDragHandle>drag_handle</mat-icon>
   </div>
 </div>

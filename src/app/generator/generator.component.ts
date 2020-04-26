@@ -12,6 +12,7 @@ import {
   FileSystemDirectoryEntry,
 } from 'ngx-file-drop';
 import { MapComponent } from '../map/map.component';
+import { Layer } from '../../models/layer.model';
 
 @Component({
   selector: 'app-generator',
@@ -20,15 +21,15 @@ import { MapComponent } from '../map/map.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneratorComponent implements OnInit {
-  fileList: File[];
+  layerList: Layer[];
   @ViewChild('map', { read: MapComponent }) map: MapComponent;
 
   constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.drop.fileList$.subscribe((fileList) => {
+    this.drop.layerList$.subscribe((layerList) => {
       // copy array for change-detection
-      this.fileList = [...fileList];
+      this.layerList = [...layerList];
       this.cd.markForCheck();
     });
   }
@@ -40,7 +41,7 @@ export class GeneratorComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           if (file.type.startsWith('image/')) {
-            this.drop.addFile(file);
+            this.drop.addLayer(file);
           }
         });
       } else {

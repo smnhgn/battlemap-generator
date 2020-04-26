@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { DropService } from '../../services/drop.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Layer } from '../../models/layer.model';
 
 @Component({
   selector: 'app-file-list',
@@ -14,14 +15,14 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListComponent implements OnInit {
-  @Input() fileList: File[];
+  @Input() layerList: Layer[];
 
   constructor(private drop: DropService) {}
 
   ngOnInit(): void {}
 
   dropped(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.fileList, event.previousIndex, event.currentIndex);
-    this.drop.updateList(this.fileList);
+    moveItemInArray(this.layerList, event.previousIndex, event.currentIndex);
+    this.drop.updateList(this.layerList);
   }
 }
