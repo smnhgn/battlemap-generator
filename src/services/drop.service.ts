@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, shareReplay } from 'rxjs/operators';
 import { Layer, defaultLayer } from '../models/layer.model';
 
@@ -11,6 +11,8 @@ export class DropService {
   layerList$ = this.layerListSubject
     .asObservable()
     .pipe(debounceTime(100), shareReplay(1));
+  private layerChangeSubject = new Subject();
+  layerChange$ = this.layerChangeSubject.asObservable().pipe(debounceTime(100));
 
   constructor() {}
 
@@ -23,5 +25,9 @@ export class DropService {
 
   updateList(layerList: Layer[]) {
     this.layerListSubject.next(layerList);
+  }
+
+  layerChange() {
+    this.layerChangeSubject.next();
   }
 }

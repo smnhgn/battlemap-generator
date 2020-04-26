@@ -4,15 +4,15 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   ElementRef,
-  ChangeDetectorRef,
   ViewChildren,
   QueryList,
   Input,
+  SimpleChanges,
 } from '@angular/core';
-import { DropService } from '../../services/drop.service';
 import { debounceTime } from 'rxjs/operators';
 import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
 import { Layer } from '../../models/layer.model';
+import { DropService } from '../../services/drop.service';
 
 @Component({
   selector: 'app-map',
@@ -22,21 +22,17 @@ import { Layer } from '../../models/layer.model';
 })
 export class MapComponent implements OnInit {
   @Input() layerList: Layer[];
-  @ViewChildren('layer', { read: CdkDrag })
+  @ViewChildren('layerComponent', { read: CdkDrag })
   layer: QueryList<CdkDrag>;
   @ViewChild('exportCanvas', { static: true })
   exportCanvas: ElementRef<HTMLCanvasElement>;
   exportCtx: CanvasRenderingContext2D;
-  scale = 0.25;
 
-  constructor() {}
+  constructor(private drop: DropService) {}
 
   ngOnInit(): void {
     this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
-  }
-
-  ngAfterViewInit(): void {
-    this.layer.changes.pipe(debounceTime(300)).subscribe(() => this.update());
+    this.drop.layerChange$.subscribe(() => this.update());
   }
 
   dragEnd(event: CdkDragEnd) {
@@ -47,9 +43,10 @@ export class MapComponent implements OnInit {
     const { width, height } = this.layer.reduce(
       (size, layer) => {
         let { x, y } = layer.getFreeDragPosition();
-        x = x / this.scale;
-        y = y / this.scale;
-        const { width, height } = layer.data.img;
+        let { width, height } = layer.data.img;
+        const scale = layer.data.scale;
+        width = width * scale;
+        height = height * scale;
         if (width + x > size.width) {
           size.width = width + x;
         }
@@ -70,7 +67,7 @@ export class MapComponent implements OnInit {
     );
     this.layer.forEach((layer) => {
       const { x, y } = layer.getFreeDragPosition();
-      this.exportCtx.drawImage(layer.data.img, x / this.scale, y / this.scale);
+      this.exportCtx.drawImage(layer.data.canvas.nativeElement, x, y);
     });
   }
 
