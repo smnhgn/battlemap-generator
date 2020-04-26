@@ -19,7 +19,6 @@ import { AppComponent } from './app.component';
 import { GeneratorComponent } from './generator/generator.component';
 import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
-import { LayerComponent } from './layer/layer.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -28,7 +27,6 @@ import { FormsModule } from '@angular/forms';
     GeneratorComponent,
     FileListComponent,
     MapComponent,
-    LayerComponent,
   ],
   imports: [
     FormsModule,

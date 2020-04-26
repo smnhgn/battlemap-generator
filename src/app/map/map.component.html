@@ -1,12 +1,10 @@
 <ng-container *ngFor="let layer of layerList">
-  <app-layer
-    [img]="layer.img"
-    [scale]="layer.scale"
+  <canvas
     cdkDragBoundary=".boundary"
     cdkDrag
     (cdkDragEnded)="dragEnd($event)"
-    [cdkDragData]="layerComponent"
-    #layerComponent
-  ></app-layer>
+    [cdkDragData]="layer"
+    #canvas
+  ></canvas>
 </ng-container>
 <canvas style="display: none; position: absolute;" #exportCanvas></canvas>
