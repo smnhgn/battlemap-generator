@@ -1,9 +1,11 @@
 export interface Layer {
-  file: File;
+  name: string;
+  img: HTMLImageElement;
   scale: number;
 }
 
 export const defaultLayer = {
-  file: null,
+  name: 'Layer',
+  img: null,
   scale: 1,
 };

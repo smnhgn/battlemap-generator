@@ -7,7 +7,6 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { loadImage } from 'src/utils/file.utils';
 import { LayerService } from '../../services/layer.service';
 
 @Component({
@@ -17,17 +16,15 @@ import { LayerService } from '../../services/layer.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayerComponent implements OnInit {
-  @Input() file: File;
+  @Input() img: HTMLImageElement;
   @Input() scale: number;
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
-  img: HTMLImageElement;
 
   constructor(private layerService: LayerService) {}
 
   async ngOnInit() {
-    this.img = await loadImage(URL.createObjectURL(this.file));
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.update();
   }
