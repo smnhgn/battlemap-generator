@@ -16,6 +16,7 @@ import { GeneratorComponent } from './generator/generator.component';
 import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
 import { LayerComponent } from './layer/layer.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { LayerComponent } from './layer/layer.component';
     LayerComponent,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

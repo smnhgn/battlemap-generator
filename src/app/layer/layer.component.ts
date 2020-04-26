@@ -5,6 +5,7 @@ import {
   ViewChild,
   Input,
   OnInit,
+  SimpleChanges,
 } from '@angular/core';
 import { loadImage } from 'src/utils/file.utils';
 
@@ -26,9 +27,21 @@ export class LayerComponent implements OnInit {
 
   async ngOnInit() {
     this.img = await loadImage(URL.createObjectURL(this.file));
+    this.ctx = this.canvas.nativeElement.getContext('2d');
+    this.update();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.ctx) {
+      this.update();
+    }
+  }
+
+  update() {
+    const { width, height } = this.canvas.nativeElement;
+    this.ctx.clearRect(0, 0, width, height);
     this.canvas.nativeElement.width = this.img.width * this.scale;
     this.canvas.nativeElement.height = this.img.height * this.scale;
-    this.ctx = this.canvas.nativeElement.getContext('2d');
     this.ctx.scale(this.scale, this.scale);
     this.ctx.drawImage(this.img, 0, 0);
   }

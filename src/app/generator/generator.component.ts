@@ -31,6 +31,7 @@ export class GeneratorComponent implements OnInit {
       // copy array for change-detection
       this.layerList = [...layerList];
       this.cd.markForCheck();
+      console.log('update layers', this.layerList);
     });
   }
 

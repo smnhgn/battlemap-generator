@@ -7,6 +7,7 @@ import {
 import { DropService } from '../../services/drop.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Layer } from '../../models/layer.model';
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-file-list',
@@ -23,6 +24,10 @@ export class FileListComponent implements OnInit {
 
   dropped(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.layerList, event.previousIndex, event.currentIndex);
+    this.drop.updateList(this.layerList);
+  }
+
+  change(event: MatSliderChange) {
     this.drop.updateList(this.layerList);
   }
 }
