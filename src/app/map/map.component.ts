@@ -7,12 +7,10 @@ import {
   ViewChildren,
   QueryList,
   Input,
-  SimpleChanges,
 } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
 import { CdkDragEnd, CdkDrag } from '@angular/cdk/drag-drop';
 import { Layer } from '../../models/layer.model';
-import { DropService } from '../../services/drop.service';
+import { LayerService } from '../../services/layer.service';
 
 @Component({
   selector: 'app-map',
@@ -28,11 +26,11 @@ export class MapComponent implements OnInit {
   exportCanvas: ElementRef<HTMLCanvasElement>;
   exportCtx: CanvasRenderingContext2D;
 
-  constructor(private drop: DropService) {}
+  constructor(private layerService: LayerService) {}
 
   ngOnInit(): void {
     this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
-    this.drop.layerChange$.subscribe(() => this.update());
+    this.layerService.layerChange$.subscribe(() => this.update());
   }
 
   dragEnd(event: CdkDragEnd) {

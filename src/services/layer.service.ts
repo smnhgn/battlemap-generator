@@ -6,7 +6,7 @@ import { Layer, defaultLayer } from '../models/layer.model';
 @Injectable({
   providedIn: 'root',
 })
-export class DropService {
+export class LayerService {
   private layerListSubject = new BehaviorSubject<Layer[]>([]);
   layerList$ = this.layerListSubject
     .asObservable()

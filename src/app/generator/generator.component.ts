@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
-import { DropService } from '../../services/drop.service';
+import { LayerService } from '../../services/layer.service';
 import {
   NgxFileDropEntry,
   FileSystemFileEntry,
@@ -24,10 +24,13 @@ export class GeneratorComponent implements OnInit {
   layerList: Layer[];
   @ViewChild('map', { read: MapComponent }) map: MapComponent;
 
-  constructor(private drop: DropService, private cd: ChangeDetectorRef) {}
+  constructor(
+    private layerService: LayerService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.drop.layerList$.subscribe((layerList) => {
+    this.layerService.layerList$.subscribe((layerList) => {
       // copy array for change-detection
       this.layerList = [...layerList];
       this.cd.markForCheck();
@@ -42,7 +45,7 @@ export class GeneratorComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           if (file.type.startsWith('image/')) {
-            this.drop.addLayer(file);
+            this.layerService.addLayer(file);
           }
         });
       } else {

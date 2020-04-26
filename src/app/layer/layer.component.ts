@@ -6,11 +6,9 @@ import {
   Input,
   OnInit,
   SimpleChanges,
-  EventEmitter,
-  Output,
 } from '@angular/core';
 import { loadImage } from 'src/utils/file.utils';
-import { DropService } from '../../services/drop.service';
+import { LayerService } from '../../services/layer.service';
 
 @Component({
   selector: 'app-layer',
@@ -26,7 +24,7 @@ export class LayerComponent implements OnInit {
   ctx: CanvasRenderingContext2D;
   img: HTMLImageElement;
 
-  constructor(private drop: DropService) {}
+  constructor(private layerService: LayerService) {}
 
   async ngOnInit() {
     this.img = await loadImage(URL.createObjectURL(this.file));
@@ -47,6 +45,6 @@ export class LayerComponent implements OnInit {
     this.canvas.nativeElement.height = this.img.height * this.scale;
     this.ctx.scale(this.scale, this.scale);
     this.ctx.drawImage(this.img, 0, 0);
-    this.drop.layerChange();
+    this.layerService.layerChange();
   }
 }

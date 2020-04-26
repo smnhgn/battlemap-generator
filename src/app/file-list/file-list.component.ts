@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy,
   Input,
 } from '@angular/core';
-import { DropService } from '../../services/drop.service';
+import { LayerService } from '../../services/layer.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Layer } from '../../models/layer.model';
 import { MatSliderChange } from '@angular/material/slider';
@@ -18,16 +18,16 @@ import { MatSliderChange } from '@angular/material/slider';
 export class FileListComponent implements OnInit {
   @Input() layerList: Layer[];
 
-  constructor(private drop: DropService) {}
+  constructor(private layerService: LayerService) {}
 
   ngOnInit(): void {}
 
   dropped(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.layerList, event.previousIndex, event.currentIndex);
-    this.drop.updateList(this.layerList);
+    this.layerService.updateList(this.layerList);
   }
 
   change(event: MatSliderChange) {
-    this.drop.updateList(this.layerList);
+    this.layerService.updateList(this.layerList);
   }
 }
