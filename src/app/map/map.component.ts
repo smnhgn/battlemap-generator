@@ -8,10 +8,12 @@ import {
   QueryList,
   Input,
   SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { LayerService } from '../../services/layer.service';
 import { Subject } from 'rxjs';
+import { NgxMoveableComponent } from 'ngx-moveable';
 
 @Component({
   selector: 'app-map',
@@ -23,12 +25,22 @@ export class MapComponent implements OnInit {
   @Input() layerList: Layer[];
   @ViewChildren('canvasElement')
   canvasList: QueryList<ElementRef<HTMLCanvasElement>>;
+  @ViewChildren('moveable', { read: NgxMoveableComponent })
+  moveableList: QueryList<NgxMoveableComponent>;
   @ViewChild('exportCanvas', { static: true })
   exportCanvas: ElementRef<HTMLCanvasElement>;
   exportCtx: CanvasRenderingContext2D;
   canvasChange = new Subject();
+  groupedList: HTMLCanvasElement[] = [];
 
-  constructor(private layerService: LayerService) {}
+  get isGroup() {
+    return this.groupedList.length > 1;
+  }
+
+  constructor(
+    private layerService: LayerService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
@@ -36,7 +48,15 @@ export class MapComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.canvasList) {
-      setTimeout(() => this.update(), 0);
+      setTimeout(() => {
+        this.update();
+        this.groupedList = this.canvasList
+          .filter((canvas) =>
+            canvas.nativeElement.classList.contains('editable')
+          )
+          .map((canvas) => canvas.nativeElement);
+        this.cd.markForCheck();
+      }, 0);
     }
   }
 
@@ -44,7 +64,6 @@ export class MapComponent implements OnInit {
     this.canvasList.forEach((canvasRef, index) => {
       const canvas = canvasRef.nativeElement;
       const layer = this.layerList[index];
-      console.log(canvas, layer);
       const ctx = canvas.getContext('2d');
       const { width, height } = canvas;
       ctx.clearRect(0, 0, width, height);
@@ -152,14 +171,22 @@ export class MapComponent implements OnInit {
   //   // set(layer.scale);
   // }
   onRotate({ transform, target, delta }, layer: Layer) {
-    console.log(layer);
     layer.rotate += delta;
     target!.style.transform = transform;
     this.updateExportCanvas();
   }
 
+  onRotateGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
+
+  onRotateGroupEnd({ targets }) {
+    this.moveableList.forEach((moveable) => moveable.updateRect());
+  }
+
   onDrag({ transform, target, left, top }, layer: Layer) {
-    console.log(layer);
     layer.x = left;
     layer.y = top;
     target.style.left = left + 'px';
@@ -168,11 +195,30 @@ export class MapComponent implements OnInit {
     this.updateExportCanvas();
   }
 
+  onDragGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
+
+  onDragGroupEnd({ targets }) {
+    this.moveableList.forEach((moveable) => moveable.updateRect());
+  }
+
   onScale({ transform, target, delta }, layer: Layer) {
-    console.log(layer);
     layer.scale[0] *= delta[0];
     layer.scale[1] *= delta[1];
     target!.style.transform = transform;
     this.updateExportCanvas();
+  }
+
+  onScaleGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
+
+  onScaleGroupEnd({ targets }) {
+    this.moveableList.forEach((moveable) => moveable.updateRect());
   }
 }

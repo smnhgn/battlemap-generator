@@ -1,15 +1,18 @@
 <ng-container *ngFor="let layer of layerList">
   <canvas
     #canvasElement
+    [class.editable]="layer.editable"
     [width]="layer.img.width"
     [height]="layer.img.height"
-  ></canvas>
+  >
+  </canvas>
   <ngx-moveable
+    #moveable
     [target]="canvasElement"
-    [className]="layer.editable ? 'editable' : 'uneditable'"
-    [draggable]="layer.editable"
-    [rotatable]="layer.editable"
-    [scalable]="layer.editable"
+    [className]="layer.editable && !isGroup ? 'editable' : 'uneditable'"
+    [draggable]="layer.editable && !isGroup"
+    [rotatable]="layer.editable && !isGroup"
+    [scalable]="layer.editable && !isGroup"
     [throttleRotate]="0"
     rotationPosition="top"
     (rotate)="onRotate($event, layer)"
@@ -20,4 +23,21 @@
     (scale)="onScale($event, layer)"
   ></ngx-moveable>
 </ng-container>
+<ngx-moveable
+  [target]="groupedList"
+  [draggable]="true"
+  [rotatable]="true"
+  [scalable]="true"
+  [throttleRotate]="0"
+  rotationPosition="top"
+  (rotateGroup)="onRotateGroup($event)"
+  (rotateGroupEnd)="onRotateGroupEnd($event)"
+  [throttleDrag]="0"
+  (dragGroup)="onDragGroup($event)"
+  (dragGroupEnd)="onDragGroupEnd($event)"
+  [keepRatio]="true"
+  [origin]="false"
+  (scaleGroup)="onScaleGroup($event)"
+  (scaleGroupEnd)="onScaleGroupEnd($event)"
+></ngx-moveable>
 <canvas style="display: none; position: absolute;" #exportCanvas></canvas>
