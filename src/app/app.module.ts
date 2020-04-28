@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -45,6 +46,7 @@ import { NgxMoveableModule } from 'ngx-moveable';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAnalyticsModule,
     NgxMoveableModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

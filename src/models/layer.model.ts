@@ -5,6 +5,7 @@ export interface Layer {
   y: number;
   scale: number[];
   rotate: number;
+  editable: boolean;
 }
 
 export const defaultLayer = {
@@ -14,4 +15,5 @@ export const defaultLayer = {
   y: 0,
   scale: [1, 1],
   rotate: 0,
+  editable: false,
 };

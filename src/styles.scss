@@ -25,6 +25,15 @@ body {
 .dropzone-content {
   height: 100%;
 }
+
+.moveable-control-box.editable .moveable-line.moveable-direction {
+  display: block;
+}
+
+.moveable-control-box.uneditable .moveable-line.moveable-direction {
+  display: none;
+}
+
 //   display: grid;
 //   grid-template-areas: "aside main";
 //   grid-template-columns: 200px 1fr;

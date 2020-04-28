@@ -17,14 +17,10 @@
   display: grid;
   align-items: center;
   grid-template-rows: 1fr;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   grid-gap: 0 8px;
   background-color: #303030;
   font-size: 14px;
-
-  .mat-slider {
-    grid-column: 1/-1;
-  }
 }
 
 .cdk-drag-preview {
