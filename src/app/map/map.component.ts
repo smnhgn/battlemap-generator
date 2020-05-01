@@ -1,22 +1,15 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   ViewChild,
   ElementRef,
-  ViewChildren,
-  QueryList,
   Input,
-  SimpleChanges,
-  ChangeDetectorRef,
-  OnDestroy,
   AfterViewInit,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
+import { Subject, merge } from 'rxjs';
+import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
 import { LayerService } from '../../services/layer.service';
-import { Subject } from 'rxjs';
-import { NgxMoveableComponent } from 'ngx-moveable';
-import { takeUntil, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -25,27 +18,33 @@ import { takeUntil, debounceTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent implements AfterViewInit {
+  private destroy$ = new Subject();
   @Input() layerList: Layer[];
   @ViewChild('canvas')
   canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
-  destroy$ = new Subject();
+  private mapChangeSubject = new Subject();
+  mapChange$ = this.mapChangeSubject
+    .asObservable()
+    .pipe(debounceTime(100), shareReplay(1));
 
-  get groupList(): Layer[] {
-    return this.layerList.filter((layer) => layer.editable);
-  }
+  constructor(private layerService: LayerService) {}
+  // get groupList(): Layer[] {
+  //   return this.layerList.filter((layer) => layer.editable);
+  // }
 
-  get isGroup() {
-    return this.groupList.length > 1;
-  }
-
-  constructor(
-    private layerService: LayerService,
-    private cd: ChangeDetectorRef
-  ) {}
+  // get isGroup() {
+  //   return this.groupList.length > 1;
+  // }
 
   ngAfterViewInit(): void {
     this.context = this.canvas.nativeElement.getContext('2d');
+    merge(this.layerService.layerList$, this.mapChange$)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        // update export canvas
+        console.log('update export canvas');
+      });
   }
 
   ngOnDestroy(): void {
@@ -53,7 +52,9 @@ export class MapComponent implements AfterViewInit {
     this.destroy$.complete();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  mapItemChange() {
+    this.mapChangeSubject.next();
+  }
 
   // private getExportCanvasSize(): { width: number; height: number } {
   //   return this.canvasList.reduce(

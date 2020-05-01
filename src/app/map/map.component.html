@@ -1,8 +1,12 @@
 <div class="canvas-container">
   <ng-container *ngFor="let layer of layerList">
-    <app-map-item [layer]="layer" [editable]="layer.editable"></app-map-item>
+    <app-map-item
+      [layer]="layer"
+      [editable]="layer.editable"
+      (change)="mapItemChange($event)"
+    ></app-map-item>
   </ng-container>
-  <ngx-moveable
+  <!-- <ngx-moveable
     [target]="groupedList"
     [draggable]="true"
     [rotatable]="true"
@@ -18,7 +22,7 @@
     [origin]="false"
     (scaleGroup)="onScaleGroup($event)"
     (scaleGroupEnd)="onScaleGroupEnd($event)"
-  ></ngx-moveable>
+  ></ngx-moveable> -->
 </div>
 <div class="export-container">
   <canvas #canvas></canvas>

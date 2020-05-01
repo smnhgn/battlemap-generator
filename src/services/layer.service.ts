@@ -12,8 +12,8 @@ export class LayerService {
   layerList$ = this.layerListSubject
     .asObservable()
     .pipe(debounceTime(100), shareReplay(1));
-  private layerChangeSubject = new Subject();
-  layerChange$ = this.layerChangeSubject.asObservable().pipe(debounceTime(100));
+  // private layerChangeSubject = new Subject();
+  // layerChange$ = this.layerChangeSubject.asObservable().pipe(debounceTime(100));
 
   async addLayer(name: string, path: string) {
     const layerList = this.layerListSubject.value;
@@ -31,7 +31,7 @@ export class LayerService {
     this.layerListSubject.next(layerList);
   }
 
-  layerChange() {
-    this.layerChangeSubject.next();
-  }
+  // layerChange() {
+  //   this.layerChangeSubject.next();
+  // }
 }
