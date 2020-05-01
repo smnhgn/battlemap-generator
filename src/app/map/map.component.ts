@@ -14,6 +14,7 @@ import { Subject, merge } from 'rxjs';
 import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
 import { MapItemComponent } from '../map-item/map-item.component';
 import { Bounds } from '../../models/bounds.model';
+import { NgxMoveableComponent } from 'ngx-moveable';
 
 @Component({
   selector: 'app-map',
@@ -76,7 +77,11 @@ export class MapComponent implements AfterViewInit {
     this.destroy$.complete();
   }
 
-  mapItemChange() {
+  mapItemChange(event: {
+    layer: Layer;
+    canvas: HTMLCanvasElement;
+    moveable: NgxMoveableComponent;
+  }) {
     this.mapChangeSubject.next();
   }
 
