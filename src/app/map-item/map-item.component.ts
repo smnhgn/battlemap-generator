@@ -73,8 +73,11 @@ export class MapItemComponent implements AfterViewInit {
   }
 
   onScale({ transform, target, delta }, layer: Layer) {
+    const bbox = target.getBoundingClientRect();
     layer.scale[0] *= delta[0];
     layer.scale[1] *= delta[1];
+    layer.width = bbox.width;
+    layer.height = bbox.height;
     target!.style.transform = transform;
     // trigger change
     this.change.emit({

@@ -61,7 +61,19 @@ export class MapComponent implements AfterViewInit {
         // update canvas
         this.mapItems.forEach((mapItem) => {
           const { layer } = mapItem;
-          this.context.drawImage(layer.img, layer.x, layer.y);
+          const scaleOffsetX = (layer.img.width - layer.width) / 2;
+          const scaleOffsetY = (layer.img.height - layer.height) / 2;
+          this.context.drawImage(
+            layer.img,
+            0,
+            0,
+            layer.img.width,
+            layer.img.height,
+            layer.x + scaleOffsetX,
+            layer.y + scaleOffsetY,
+            layer.width,
+            layer.height
+          );
         });
       });
   }
@@ -78,12 +90,9 @@ export class MapComponent implements AfterViewInit {
   private getCanvasSize(
     mapItems: MapItemComponent[]
   ): { width: number; height: number } {
-    const ctrBbox = this.container.nativeElement.getBoundingClientRect();
     const sizes = mapItems.map((mapItem) => {
-      const cvsBbox = mapItem.canvas.nativeElement.getBoundingClientRect();
-      const x = cvsBbox.x - ctrBbox.x;
-      const y = cvsBbox.y - ctrBbox.y;
-      return { width: cvsBbox.width, height: cvsBbox.height, x, y };
+      const { width, height, x, y } = mapItem.layer;
+      return { width, height, x, y };
     });
     const maxWidth = Math.max(0, ...sizes.map((size) => size.width + size.x));
     const maxHeight = Math.max(0, ...sizes.map((size) => size.height + size.y));

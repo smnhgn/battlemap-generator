@@ -17,11 +17,13 @@ export class LayerService {
 
   async addLayer(name: string, path: string) {
     const layerList = this.layerListSubject.value;
-
+    const img = await loadImage(path);
     const layer = {
       ...defaultLayer,
       name,
-      img: await loadImage(path),
+      img,
+      width: img.width,
+      height: img.height,
     };
     layerList.push(layer);
     this.updateList(layerList);
