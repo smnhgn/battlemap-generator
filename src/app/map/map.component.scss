@@ -1,6 +1,10 @@
 :host {
   height: 100%;
   overflow: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: block;
+}
+
+.export-container {
+  visibility: hidden;
+  position: absolute;
 }

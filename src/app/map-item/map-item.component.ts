@@ -23,6 +23,8 @@ export class MapItemComponent implements AfterViewInit {
   @Input() layer: Layer;
   @Input() editable: boolean;
   @Input() index: number;
+  @Input() bounds: any;
+
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
   @ViewChild('moveable', { read: NgxMoveableComponent })

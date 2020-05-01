@@ -8,6 +8,8 @@
 <ngx-moveable
   #moveable
   [target]="canvas"
+  [snappable]="true"
+  [bounds]="bounds"
   [className]="editable ? 'editable' : ''"
   [draggable]="editable"
   [rotatable]="editable"

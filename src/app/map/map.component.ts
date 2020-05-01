@@ -37,6 +37,8 @@ export class MapComponent implements AfterViewInit {
     .asObservable()
     .pipe(debounceTime(100), shareReplay(1));
 
+  bounds: DOMRect;
+
   // get groupList(): Layer[] {
   //   return this.layerList.filter((layer) => layer.editable);
   // }
@@ -54,6 +56,7 @@ export class MapComponent implements AfterViewInit {
         const { width, height } = this.getCanvasSize(this.mapItems.toArray());
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
+        this.bounds = this.canvas.nativeElement.getBoundingClientRect();
         // clear canvas
         this.context.clearRect(0, 0, width, height);
         // update canvas
@@ -171,13 +174,13 @@ export class MapComponent implements AfterViewInit {
   //   });
   // }
 
-  // export() {
-  //   const link = document.createElement('a');
-  //   link.download = 'battlemap.png';
-  //   link.href = this.exportCanvas.nativeElement.toDataURL();
-  //   link.click();
-  //   link.remove();
-  // }
+  export() {
+    const link = document.createElement('a');
+    link.download = 'battlemap.png';
+    link.href = this.canvas.nativeElement.toDataURL();
+    link.click();
+    link.remove();
+  }
 
   // onRotateStart({ set, transform, target }, layer: Layer) {
   //   // scaleStart && scaleStart.set(layer.scale);

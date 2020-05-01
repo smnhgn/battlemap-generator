@@ -68,6 +68,6 @@ export class GeneratorComponent implements OnInit {
   }
 
   export() {
-    // this.map.export();
+    this.map.export();
   }
 }

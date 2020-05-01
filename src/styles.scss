@@ -16,6 +16,7 @@ body {
 body {
   margin: 0;
   font-family: Montserrat, "Helvetica Neue", sans-serif;
+  overflow: hidden;
 }
 
 .dropzone {
@@ -28,6 +29,10 @@ body {
 
 .moveable-control-box.editable .moveable-line.moveable-direction {
   display: block;
+}
+
+.moveable-control-box .moveable-guideline {
+  display: none;
 }
 
 .moveable-control-box .moveable-line.moveable-direction {
