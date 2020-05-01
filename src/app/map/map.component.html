@@ -5,6 +5,7 @@
       [editable]="layer.editable"
       [index]="index"
       [bounds]="bounds"
+      [container]="container"
       (change)="mapItemChange($event)"
       #mapItem
     ></app-map-item>
@@ -26,7 +27,5 @@
     (scaleGroup)="onScaleGroup($event)"
     (scaleGroupEnd)="onScaleGroupEnd($event)"
   ></ngx-moveable> -->
-</div>
-<div class="export-container">
-  <canvas #canvas></canvas>
+  <canvas class="export-canvas" #canvas></canvas>
 </div>

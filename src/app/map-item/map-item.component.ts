@@ -24,6 +24,7 @@ export class MapItemComponent implements AfterViewInit {
   @Input() editable: boolean;
   @Input() index: number;
   @Input() bounds: any;
+  @Input() container: any;
 
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;

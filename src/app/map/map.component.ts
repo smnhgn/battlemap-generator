@@ -7,6 +7,7 @@ import {
   AfterViewInit,
   ViewChildren,
   QueryList,
+  HostListener,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
@@ -58,12 +59,11 @@ export class MapComponent implements AfterViewInit {
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
         // set bounds
-        const bbox = this.canvas.nativeElement.getBoundingClientRect();
-        const bounds = this.getBounds(bbox);
-
+        const bounds = { top: 0, right: width, bottom: height, left: 0 };
         if (this.shouldBoundsUpdate(this.bounds, bounds)) {
           this.bounds = bounds;
         }
+
         // clear canvas
         this.context.clearRect(0, 0, width, height);
         // update canvas
@@ -133,16 +133,16 @@ export class MapComponent implements AfterViewInit {
     return shouldUpdate;
   }
 
-  private getBounds(bbox: DOMRect): Bounds {
-    let { top, right, bottom, left } = bbox;
-    const padding = 0;
-    return {
-      top: top - padding,
-      right: right + padding,
-      bottom: bottom + padding,
-      left: left - padding,
-    };
-  }
+  // private getBounds(bbox: DOMRect): Bounds {
+  //   let { top, right, bottom, left } = bbox;
+  //   const padding = 0;
+  //   return {
+  //     top: top - padding,
+  //     right: right + padding,
+  //     bottom: bottom + padding,
+  //     left: left - padding,
+  //   };
+  // }
   // dragEnd(event: CdkDragEnd) {
   //   this.update();
   // }

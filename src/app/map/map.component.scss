@@ -4,7 +4,14 @@
   display: block;
 }
 
+.canvas-container {
+  display: inline-block;
+}
+
 .export-container {
-  visibility: hidden;
   position: absolute;
+}
+
+.export-canvas {
+  visibility: hidden;
 }
