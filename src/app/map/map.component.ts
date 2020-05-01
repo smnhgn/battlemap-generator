@@ -23,6 +23,8 @@ export class MapComponent implements AfterViewInit {
   private destroy$ = new Subject();
   @Input() layerList: Layer[];
 
+  @ViewChild('container')
+  container: ElementRef<HTMLDivElement>;
   @ViewChild('canvas')
   canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
@@ -49,8 +51,7 @@ export class MapComponent implements AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         // set canvas size
-        const layers = this.mapItems.map((mapItem) => mapItem.layer);
-        const { width, height } = this.getCanvasSize(layers);
+        const { width, height } = this.getCanvasSize(this.mapItems.toArray());
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
 
@@ -74,24 +75,19 @@ export class MapComponent implements AfterViewInit {
     this.mapChangeSubject.next();
   }
 
-  private getCanvasSize(layers: Layer[]): { width: number; height: number } {
-    return layers.reduce(
-      (size, layer, index) => {
-        let { x, y } = layer;
-        let { width, height } = layer.img;
-        const [scaleX, scaleY] = layer.scale;
-        width = width * scaleX + (width - width * scaleX) / 2;
-        height = height * scaleY + (height - height * scaleY) / 2;
-        if (width + x > size.width) {
-          size.width = width + x;
-        }
-        if (height + y > size.height) {
-          size.height = height + y;
-        }
-        return size;
-      },
-      { width: 0, height: 0 }
-    );
+  private getCanvasSize(
+    mapItems: MapItemComponent[]
+  ): { width: number; height: number } {
+    const ctrBbox = this.container.nativeElement.getBoundingClientRect();
+    const sizes = mapItems.map((mapItem) => {
+      const cvsBbox = mapItem.canvas.nativeElement.getBoundingClientRect();
+      const x = cvsBbox.x - ctrBbox.x;
+      const y = cvsBbox.y - ctrBbox.y;
+      return { width: cvsBbox.width, height: cvsBbox.height, x, y };
+    });
+    const maxWidth = Math.max(0, ...sizes.map((size) => size.width + size.x));
+    const maxHeight = Math.max(0, ...sizes.map((size) => size.height + size.y));
+    return { width: maxWidth, height: maxHeight };
   }
 
   // dragEnd(event: CdkDragEnd) {
