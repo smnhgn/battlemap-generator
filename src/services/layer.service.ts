@@ -15,15 +15,13 @@ export class LayerService {
   private layerChangeSubject = new Subject();
   layerChange$ = this.layerChangeSubject.asObservable().pipe(debounceTime(100));
 
-  constructor() {}
-
-  async addLayer(file: File) {
+  async addLayer(name: string, path: string) {
     const layerList = this.layerListSubject.value;
 
     const layer = {
       ...defaultLayer,
-      name: file.name,
-      img: await loadImage(URL.createObjectURL(file)),
+      name,
+      img: await loadImage(path),
     };
     layerList.push(layer);
     this.updateList(layerList);

@@ -36,6 +36,17 @@ export class GeneratorComponent implements OnInit {
       this.cd.markForCheck();
       console.log('update layers', this.layerList);
     });
+
+    // for testing
+    // const imagePaths = [
+    //   'assets/Campsite/Tent 1.png',
+    //   'assets/Campsite/Bedroll 1.png',
+    //   'assets/Campsite/Firepit.png',
+    // ];
+    // imagePaths.forEach((path) => {
+    //   const name = path.split('/').pop();
+    //   this.layerService.addLayer(name, path);
+    // });
   }
 
   dropped(files: NgxFileDropEntry[]) {
@@ -45,7 +56,8 @@ export class GeneratorComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           if (file.type.startsWith('image/')) {
-            this.layerService.addLayer(file);
+            const path = URL.createObjectURL(file);
+            this.layerService.addLayer(file.name, path);
           }
         });
       } else {
