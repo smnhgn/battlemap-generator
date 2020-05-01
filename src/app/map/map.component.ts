@@ -5,11 +5,13 @@ import {
   ElementRef,
   Input,
   AfterViewInit,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
 import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
-import { LayerService } from '../../services/layer.service';
+import { MapItemComponent } from '../map-item/map-item.component';
 
 @Component({
   selector: 'app-map',
@@ -20,15 +22,19 @@ import { LayerService } from '../../services/layer.service';
 export class MapComponent implements AfterViewInit {
   private destroy$ = new Subject();
   @Input() layerList: Layer[];
+
   @ViewChild('canvas')
   canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
+
+  @ViewChildren('mapItem', { read: MapItemComponent })
+  mapItems: QueryList<MapItemComponent>;
+
   private mapChangeSubject = new Subject();
   mapChange$ = this.mapChangeSubject
     .asObservable()
     .pipe(debounceTime(100), shareReplay(1));
 
-  constructor(private layerService: LayerService) {}
   // get groupList(): Layer[] {
   //   return this.layerList.filter((layer) => layer.editable);
   // }
@@ -39,11 +45,14 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.context = this.canvas.nativeElement.getContext('2d');
-    merge(this.layerService.layerList$, this.mapChange$)
+    merge(this.mapChange$)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         // update export canvas
-        console.log('update export canvas');
+        console.log(
+          'update export canvas',
+          this.mapItems.map((mapItem) => mapItem.layer)
+        );
       });
   }
 

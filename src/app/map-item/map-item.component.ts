@@ -23,7 +23,8 @@ export class MapItemComponent implements AfterViewInit {
   @Input() editable: boolean;
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
-  @ViewChild('moveable') moveable: ElementRef<NgxMoveableComponent>;
+  @ViewChild('moveable', { read: NgxMoveableComponent })
+  moveable: NgxMoveableComponent;
   @Output() change = new EventEmitter<{
     layer: Layer;
     canvas: HTMLCanvasElement;
@@ -38,15 +39,22 @@ export class MapItemComponent implements AfterViewInit {
     const { width, height } = canvas;
     this.context.clearRect(0, 0, width, height);
     this.context.drawImage(this.layer.img, 0, 0);
+    // trigger change
+    this.change.emit({
+      layer: this.layer,
+      canvas: this.canvas.nativeElement,
+      moveable: this.moveable,
+    });
   }
 
   onRotate({ transform, target, delta }, layer: Layer) {
     layer.rotate += delta;
     target!.style.transform = transform;
+    // trigger change
     this.change.emit({
       layer,
       canvas: this.canvas.nativeElement,
-      moveable: this.moveable.nativeElement,
+      moveable: this.moveable,
     });
   }
 
@@ -56,10 +64,11 @@ export class MapItemComponent implements AfterViewInit {
     target.style.left = left + 'px';
     target.style.top = top + 'px';
     // target!.style.transform = transform;
+    // trigger change
     this.change.emit({
       layer,
       canvas: this.canvas.nativeElement,
-      moveable: this.moveable.nativeElement,
+      moveable: this.moveable,
     });
   }
 
@@ -67,10 +76,11 @@ export class MapItemComponent implements AfterViewInit {
     layer.scale[0] *= delta[0];
     layer.scale[1] *= delta[1];
     target!.style.transform = transform;
+    // trigger change
     this.change.emit({
       layer,
       canvas: this.canvas.nativeElement,
-      moveable: this.moveable.nativeElement,
+      moveable: this.moveable,
     });
   }
 }
