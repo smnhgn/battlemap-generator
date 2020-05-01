@@ -22,6 +22,7 @@ import { FileListComponent } from './file-list/file-list.component';
 import { MapComponent } from './map/map.component';
 import { FormsModule } from '@angular/forms';
 import { NgxMoveableModule } from 'ngx-moveable';
+import { MapItemComponent } from './map-item/map-item.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NgxMoveableModule } from 'ngx-moveable';
     GeneratorComponent,
     FileListComponent,
     MapComponent,
+    MapItemComponent,
   ],
   imports: [
     FormsModule,

@@ -9,11 +9,14 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectorRef,
+  OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { LayerService } from '../../services/layer.service';
 import { Subject } from 'rxjs';
 import { NgxMoveableComponent } from 'ngx-moveable';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -21,20 +24,19 @@ import { NgxMoveableComponent } from 'ngx-moveable';
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements AfterViewInit {
   @Input() layerList: Layer[];
-  @ViewChildren('canvasElement')
-  canvasList: QueryList<ElementRef<HTMLCanvasElement>>;
-  @ViewChildren('moveable', { read: NgxMoveableComponent })
-  moveableList: QueryList<NgxMoveableComponent>;
-  @ViewChild('exportCanvas', { static: true })
-  exportCanvas: ElementRef<HTMLCanvasElement>;
-  exportCtx: CanvasRenderingContext2D;
-  canvasChange = new Subject();
-  groupedList: HTMLCanvasElement[] = [];
+  @ViewChild('canvas')
+  canvas: ElementRef<HTMLCanvasElement>;
+  context: CanvasRenderingContext2D;
+  destroy$ = new Subject();
+
+  get groupList(): Layer[] {
+    return this.layerList.filter((layer) => layer.editable);
+  }
 
   get isGroup() {
-    return this.groupedList.length > 1;
+    return this.groupList.length > 1;
   }
 
   constructor(
@@ -42,62 +44,38 @@ export class MapComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.exportCtx = this.exportCanvas.nativeElement.getContext('2d');
+  ngAfterViewInit(): void {
+    this.context = this.canvas.nativeElement.getContext('2d');
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.canvasList) {
-      setTimeout(() => {
-        this.update();
-        this.groupedList = this.canvasList
-          .filter((canvas) =>
-            canvas.nativeElement.classList.contains('editable')
-          )
-          .map((canvas) => canvas.nativeElement);
-        this.cd.markForCheck();
-      }, 0);
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  update() {
-    this.canvasList.forEach((canvasRef, index) => {
-      const canvas = canvasRef.nativeElement;
-      const layer = this.layerList[index];
-      const ctx = canvas.getContext('2d');
-      const { width, height } = canvas;
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(layer.img, 0, 0);
-    });
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (this.canvasList) {
-  //     setTimeout(() => this.update(), 0);
-  //   }
+  // private getExportCanvasSize(): { width: number; height: number } {
+  //   return this.canvasList.reduce(
+  //     (size, canvasRef, index) => {
+  //       const canvas = canvasRef.nativeElement;
+  //       const layer = this.layerList[index];
+  //       let { x, y } = layer;
+  //       let { width, height } = layer.img;
+  //       const [scaleX, scaleY] = layer.scale;
+  //       width = width * scaleX + (width - width * scaleX) / 2;
+  //       height = height * scaleY + (height - height * scaleY) / 2;
+  //       if (width + x > size.width) {
+  //         size.width = width + x;
+  //       }
+  //       if (height + y > size.height) {
+  //         size.height = height + y;
+  //       }
+  //       return size;
+  //     },
+  //     { width: 0, height: 0 }
+  //   );
   // }
-
-  private getExportCanvasSize(): { width: number; height: number } {
-    return this.canvasList.reduce(
-      (size, canvasRef, index) => {
-        const canvas = canvasRef.nativeElement;
-        const layer = this.layerList[index];
-        let { x, y } = layer;
-        let { width, height } = layer.img;
-        const [scaleX, scaleY] = layer.scale;
-        width = width * scaleX + (width - width * scaleX) / 2;
-        height = height * scaleY + (height - height * scaleY) / 2;
-        if (width + x > size.width) {
-          size.width = width + x;
-        }
-        if (height + y > size.height) {
-          size.height = height + y;
-        }
-        return size;
-      },
-      { width: 0, height: 0 }
-    );
-  }
 
   // dragEnd(event: CdkDragEnd) {
   //   this.update();
@@ -117,52 +95,53 @@ export class MapComponent implements OnInit {
   //   });
   // }
 
-  updateExportCanvas() {
-    let { width, height } = this.getExportCanvasSize();
-    this.exportCanvas.nativeElement.width = width;
-    this.exportCanvas.nativeElement.height = height;
-    ({ width, height } = this.exportCanvas.nativeElement);
-    this.exportCtx.clearRect(0, 0, width, height);
+  // updateExportCanvas() {
+  //   let { width, height } = this.getExportCanvasSize();
+  //   this.exportCanvas.nativeElement.width = width;
+  //   this.exportCanvas.nativeElement.height = height;
+  //   // console.log('updateExportCanvas', width, height);
+  //   ({ width, height } = this.exportCanvas.nativeElement);
+  //   this.exportCtx.clearRect(0, 0, width, height);
 
-    this.canvasList.forEach((canvasRef, index) => {
-      const canvas = canvasRef.nativeElement;
-      const ctx = canvas.getContext('2d');
-      const context = this.exportCtx;
-      const layer = this.layerList[index];
-      let { width, height } = layer.img;
-      const [scaleX, scaleY] = layer.scale;
-      // width = width * layer.scale[0];
-      // height = height * layer.scale[1];
-      let { x, y } = layer;
-      context.translate(width / 2, height / 2);
-      context.rotate((layer.rotate * Math.PI) / 180);
-      context.translate(-width / 2, -height / 2);
-      context.drawImage(
-        ctx.canvas,
-        x + (width - width * scaleX) / 2,
-        y + (width - width * scaleX) / 2,
-        scaleX * width,
-        -scaleY * height
-      );
-      context.rotate(-(layer.rotate * Math.PI) / 180);
+  //   this.canvasList.forEach((canvasRef, index) => {
+  //     const canvas = canvasRef.nativeElement;
+  //     const ctx = canvas.getContext('2d');
+  //     const context = this.exportCtx;
+  //     const layer = this.layerList[index];
+  //     let { width, height } = layer.img;
+  //     const [scaleX, scaleY] = layer.scale;
+  //     // width = width * layer.scale[0];
+  //     // height = height * layer.scale[1];
+  //     let { x, y } = layer;
+  //     // context.translate(width / 2, height / 2);
+  //     // context.rotate((layer.rotate * Math.PI) / 180);
+  //     // context.translate(-width / 2, -height / 2);
+  //     // context.drawImage(
+  //     //   ctx.canvas,
+  //     //   x + (width - width * scaleX) / 2,
+  //     //   y + (width - width * scaleX) / 2,
+  //     //   scaleX * width,
+  //     //   -scaleY * height
+  //     // );
+  //     // context.rotate(-(layer.rotate * Math.PI) / 180);
 
-      // context.save();
-      // // context.scale(scaleX, scaleY);
-      // context.translate(width / 2, height / 2);
-      // context.rotate((layer.rotate * Math.PI) / 180);
-      // context.translate(-width / 2, -height / 2);
-      // context.drawImage(canvas, x, y, scaleX * width, scaleY * height);
-      // context.restore();
-    });
-  }
+  //     context.save();
+  //     // context.scale(scaleX, scaleY);
+  //     context.translate(width / 2, height / 2);
+  //     context.rotate((layer.rotate * Math.PI) / 180);
+  //     context.translate(-width / 2, -height / 2);
+  //     context.drawImage(canvas, x, y, scaleX * width, scaleY * height);
+  //     context.restore();
+  //   });
+  // }
 
-  export() {
-    const link = document.createElement('a');
-    link.download = 'battlemap.png';
-    link.href = this.exportCanvas.nativeElement.toDataURL();
-    link.click();
-    link.remove();
-  }
+  // export() {
+  //   const link = document.createElement('a');
+  //   link.download = 'battlemap.png';
+  //   link.href = this.exportCanvas.nativeElement.toDataURL();
+  //   link.click();
+  //   link.remove();
+  // }
 
   // onRotateStart({ set, transform, target }, layer: Layer) {
   //   // scaleStart && scaleStart.set(layer.scale);
@@ -170,55 +149,43 @@ export class MapComponent implements OnInit {
   //   target!.style.transform = transform;
   //   // set(layer.scale);
   // }
-  onRotate({ transform, target, delta }, layer: Layer) {
-    layer.rotate += delta;
-    target!.style.transform = transform;
-    this.updateExportCanvas();
-  }
 
-  onRotateGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
-      target!.style.transform = transform;
-    });
-  }
+  // onRotateGroup({ targets, events }) {
+  //   events.forEach(({ target, transform }, i) => {
+  //     target!.style.transform = transform;
+  //   });
+  // }
 
-  onRotateGroupEnd({ targets }) {
-    this.moveableList.forEach((moveable) => moveable.updateRect());
-  }
+  // onRotateGroupEnd({ targets }) {
+  //   // this.moveableList.forEach((moveable) => {
+  //   //   // moveable.updateRect();
+  //   //   this.canvasChangeSubject.next();
+  //   // });
+  // }
 
-  onDrag({ transform, target, left, top }, layer: Layer) {
-    layer.x = left;
-    layer.y = top;
-    target.style.left = left + 'px';
-    target.style.top = top + 'px';
-    // target!.style.transform = transform;
-    this.updateExportCanvas();
-  }
+  // onDragGroup({ targets, events }) {
+  //   events.forEach(({ target, transform }, i) => {
+  //     target!.style.transform = transform;
+  //   });
+  // }
 
-  onDragGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
-      target!.style.transform = transform;
-    });
-  }
+  // onDragGroupEnd({ targets }) {
+  //   // this.moveableList.forEach((moveable) => {
+  //   //   // moveable.updateRect();
+  //   //   this.canvasChangeSubject.next();
+  //   // });
+  // }
 
-  onDragGroupEnd({ targets }) {
-    this.moveableList.forEach((moveable) => moveable.updateRect());
-  }
+  // onScaleGroup({ targets, events }) {
+  //   events.forEach(({ target, transform }, i) => {
+  //     target!.style.transform = transform;
+  //   });
+  // }
 
-  onScale({ transform, target, delta }, layer: Layer) {
-    layer.scale[0] *= delta[0];
-    layer.scale[1] *= delta[1];
-    target!.style.transform = transform;
-    this.updateExportCanvas();
-  }
-
-  onScaleGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
-      target!.style.transform = transform;
-    });
-  }
-
-  onScaleGroupEnd({ targets }) {
-    this.moveableList.forEach((moveable) => moveable.updateRect());
-  }
+  // onScaleGroupEnd({ targets }) {
+  //   // this.moveableList.forEach((moveable) => {
+  //   //   // moveable.updateRect();
+  //   //   this.canvasChangeSubject.next();
+  //   // });
+  // }
 }

@@ -1,0 +1,23 @@
+<canvas
+  #canvas
+  [class.editable]="editable"
+  [width]="layer.img.width"
+  [height]="layer.img.height"
+>
+</canvas>
+<ngx-moveable
+  #moveable
+  [target]="canvas"
+  [className]="editable ? 'editable' : ''"
+  [draggable]="editable"
+  [rotatable]="editable"
+  [scalable]="editable"
+  (drag)="onDrag($event, layer)"
+  (rotate)="onRotate($event, layer)"
+  (scale)="onScale($event, layer)"
+  rotationPosition="top"
+  [throttleDrag]="0"
+  [throttleRotate]="0"
+  [keepRatio]="true"
+  [origin]="false"
+></ngx-moveable>
