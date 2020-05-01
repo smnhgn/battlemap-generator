@@ -48,11 +48,20 @@ export class MapComponent implements AfterViewInit {
     merge(this.mapChange$)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        // update export canvas
-        console.log(
-          'update export canvas',
-          this.mapItems.map((mapItem) => mapItem.layer)
-        );
+        // set canvas size
+        const layers = this.mapItems.map((mapItem) => mapItem.layer);
+        const { width, height } = this.getCanvasSize(layers);
+        this.canvas.nativeElement.width = width;
+        this.canvas.nativeElement.height = height;
+
+        // clear canvas
+        this.context.clearRect(0, 0, width, height);
+
+        // update canvas
+        this.mapItems.forEach((mapItem) => {
+          const { layer } = mapItem;
+          this.context.drawImage(layer.img, layer.x, layer.y);
+        });
       });
   }
 
@@ -65,27 +74,25 @@ export class MapComponent implements AfterViewInit {
     this.mapChangeSubject.next();
   }
 
-  // private getExportCanvasSize(): { width: number; height: number } {
-  //   return this.canvasList.reduce(
-  //     (size, canvasRef, index) => {
-  //       const canvas = canvasRef.nativeElement;
-  //       const layer = this.layerList[index];
-  //       let { x, y } = layer;
-  //       let { width, height } = layer.img;
-  //       const [scaleX, scaleY] = layer.scale;
-  //       width = width * scaleX + (width - width * scaleX) / 2;
-  //       height = height * scaleY + (height - height * scaleY) / 2;
-  //       if (width + x > size.width) {
-  //         size.width = width + x;
-  //       }
-  //       if (height + y > size.height) {
-  //         size.height = height + y;
-  //       }
-  //       return size;
-  //     },
-  //     { width: 0, height: 0 }
-  //   );
-  // }
+  private getCanvasSize(layers: Layer[]): { width: number; height: number } {
+    return layers.reduce(
+      (size, layer, index) => {
+        let { x, y } = layer;
+        let { width, height } = layer.img;
+        const [scaleX, scaleY] = layer.scale;
+        width = width * scaleX + (width - width * scaleX) / 2;
+        height = height * scaleY + (height - height * scaleY) / 2;
+        if (width + x > size.width) {
+          size.width = width + x;
+        }
+        if (height + y > size.height) {
+          size.height = height + y;
+        }
+        return size;
+      },
+      { width: 0, height: 0 }
+    );
+  }
 
   // dragEnd(event: CdkDragEnd) {
   //   this.update();
