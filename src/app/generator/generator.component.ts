@@ -39,6 +39,7 @@ export class GeneratorComponent implements OnInit {
 
     // for testing
     const imagePaths = [
+      'assets/Grass Field.jpg',
       'assets/Campsite/Tent 1.png',
       'assets/Campsite/Bedroll 1.png',
       'assets/Campsite/Firepit.png',
