@@ -54,27 +54,10 @@ export class MapComponent implements AfterViewInit {
         const { width, height } = this.getCanvasSize(this.mapItems.toArray());
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
-
         // clear canvas
         this.context.clearRect(0, 0, width, height);
-
         // update canvas
-        this.mapItems.forEach((mapItem) => {
-          const { layer } = mapItem;
-          const scaleOffsetX = (layer.img.width - layer.width) / 2;
-          const scaleOffsetY = (layer.img.height - layer.height) / 2;
-          this.context.drawImage(
-            layer.img,
-            0,
-            0,
-            layer.img.width,
-            layer.img.height,
-            layer.x + scaleOffsetX,
-            layer.y + scaleOffsetY,
-            layer.width,
-            layer.height
-          );
-        });
+        this.drawImages(this.mapItems.toArray());
       });
   }
 
@@ -97,6 +80,37 @@ export class MapComponent implements AfterViewInit {
     const maxWidth = Math.max(0, ...sizes.map((size) => size.width + size.x));
     const maxHeight = Math.max(0, ...sizes.map((size) => size.height + size.y));
     return { width: maxWidth, height: maxHeight };
+  }
+
+  private drawImages(mapItems: MapItemComponent[]) {
+    this.mapItems.forEach((mapItem) => {
+      const { layer } = mapItem;
+      const { width, height, x, y, rotate } = layer;
+      const { width: imgWidth, height: imgHeight } = layer.img;
+      const offsetX = (imgWidth - width) / 2;
+      const offsetY = (imgHeight - height) / 2;
+
+      this.context.save();
+      // move to the position where layer should be drawn
+      this.context.translate(x + offsetX, y + offsetY);
+      // move to the center of the layer
+      this.context.translate(width / 2, height / 2);
+      // // rotate the canvas to the specified degrees
+      this.context.rotate((rotate * Math.PI) / 180);
+
+      this.context.drawImage(
+        layer.img,
+        0,
+        0,
+        imgWidth,
+        imgHeight,
+        -(width / 2),
+        -(height / 2),
+        width,
+        height
+      );
+      this.context.restore();
+    });
   }
 
   // dragEnd(event: CdkDragEnd) {

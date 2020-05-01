@@ -1,8 +1,9 @@
 <div class="canvas-container" #container>
-  <ng-container *ngFor="let layer of layerList">
+  <ng-container *ngFor="let layer of layerList; let index = index">
     <app-map-item
       [layer]="layer"
       [editable]="layer.editable"
+      [index]="index"
       (change)="mapItemChange($event)"
       #mapItem
     ></app-map-item>

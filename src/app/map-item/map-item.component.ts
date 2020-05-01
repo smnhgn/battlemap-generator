@@ -8,6 +8,7 @@ import {
   Output,
   EventEmitter,
   AfterViewInit,
+  SimpleChanges,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { NgxMoveableComponent } from 'ngx-moveable';
@@ -21,6 +22,7 @@ import { NgxMoveableComponent } from 'ngx-moveable';
 export class MapItemComponent implements AfterViewInit {
   @Input() layer: Layer;
   @Input() editable: boolean;
+  @Input() index: number;
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
   context: CanvasRenderingContext2D;
   @ViewChild('moveable', { read: NgxMoveableComponent })
@@ -32,6 +34,17 @@ export class MapItemComponent implements AfterViewInit {
   }>();
 
   constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // trigger change
+    if (this.canvas) {
+      this.change.emit({
+        layer: this.layer,
+        canvas: this.canvas.nativeElement,
+        moveable: this.moveable,
+      });
+    }
+  }
 
   ngAfterViewInit() {
     const canvas = this.canvas.nativeElement;
@@ -76,8 +89,8 @@ export class MapItemComponent implements AfterViewInit {
     const bbox = target.getBoundingClientRect();
     layer.scale[0] *= delta[0];
     layer.scale[1] *= delta[1];
-    layer.width = bbox.width;
-    layer.height = bbox.height;
+    layer.width = Math.round(layer.img.width * layer.scale[0]);
+    layer.height = Math.round(layer.img.height * layer.scale[1]);
     target!.style.transform = transform;
     // trigger change
     this.change.emit({
