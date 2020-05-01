@@ -12,6 +12,7 @@ import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
 import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
 import { MapItemComponent } from '../map-item/map-item.component';
+import { Bounds } from '../../models/bounds.model';
 
 @Component({
   selector: 'app-map',
@@ -37,7 +38,7 @@ export class MapComponent implements AfterViewInit {
     .asObservable()
     .pipe(debounceTime(100), shareReplay(1));
 
-  bounds: DOMRect;
+  bounds: Bounds;
 
   // get groupList(): Layer[] {
   //   return this.layerList.filter((layer) => layer.editable);
@@ -56,7 +57,13 @@ export class MapComponent implements AfterViewInit {
         const { width, height } = this.getCanvasSize(this.mapItems.toArray());
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
-        this.bounds = this.canvas.nativeElement.getBoundingClientRect();
+        // set bounds
+        const bbox = this.canvas.nativeElement.getBoundingClientRect();
+        const bounds = this.getBounds(bbox);
+
+        if (this.shouldBoundsUpdate(this.bounds, bounds)) {
+          this.bounds = bounds;
+        }
         // clear canvas
         this.context.clearRect(0, 0, width, height);
         // update canvas
@@ -86,7 +93,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private drawImages(mapItems: MapItemComponent[]) {
-    this.mapItems.forEach((mapItem) => {
+    mapItems.forEach((mapItem) => {
       const { layer } = mapItem;
       const { width, height, x, y, rotate } = layer;
       const { width: imgWidth, height: imgHeight } = layer.img;
@@ -116,6 +123,26 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  private shouldBoundsUpdate(oldBounds: Bounds, newBounds: Bounds) {
+    const shouldUpdate =
+      !oldBounds ||
+      newBounds.top !== oldBounds.top ||
+      newBounds.right !== oldBounds.right ||
+      newBounds.bottom !== oldBounds.bottom ||
+      newBounds.left !== oldBounds.left;
+    return shouldUpdate;
+  }
+
+  private getBounds(bbox: DOMRect): Bounds {
+    let { top, right, bottom, left } = bbox;
+    const padding = 0;
+    return {
+      top: top - padding,
+      right: right + padding,
+      bottom: bottom + padding,
+      left: left - padding,
+    };
+  }
   // dragEnd(event: CdkDragEnd) {
   //   this.update();
   // }
