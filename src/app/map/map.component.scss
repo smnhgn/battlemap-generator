@@ -4,14 +4,16 @@
   display: block;
 }
 
-.canvas-container {
-  display: inline-block;
-}
-
 .export-container {
   position: absolute;
 }
 
 .export-canvas {
   visibility: hidden;
+  // grid-column-start: 2;
+}
+
+.canvas-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

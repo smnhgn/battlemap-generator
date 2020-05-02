@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { debounceTime, shareReplay } from 'rxjs/operators';
-import { Layer, defaultLayer } from '../models/layer.model';
+import { Layer } from '../models/layer.model';
 import { loadImage } from '../utils/file.utils';
 
 @Injectable({
@@ -19,11 +19,15 @@ export class LayerService {
     const layerList = this.layerListSubject.value;
     const img = await loadImage(path);
     const layer = {
-      ...defaultLayer,
       name,
       img,
       width: img.width,
       height: img.height,
+      x: 0,
+      y: 0,
+      scale: [1, 1],
+      rotate: 0,
+      editable: false,
     };
     layerList.push(layer);
     this.updateList(layerList);
