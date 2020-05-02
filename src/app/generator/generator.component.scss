@@ -34,7 +34,7 @@
   width: 200px;
   display: grid;
   align-items: center;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: auto 1fr auto auto;
 }
 
 .file-list-container {

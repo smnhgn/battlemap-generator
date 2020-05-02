@@ -6,7 +6,7 @@
 >
   <div *ngFor="let layer of layerList" class="file-item" cdkDrag>
     <mat-icon class="drag-handle" cdkDragHandle>drag_handle</mat-icon>
-    <span>{{ layer.name }}</span>
+    <span class="text">{{ layer.name }}</span>
     <mat-checkbox
       [(ngModel)]="layer.editable"
       (change)="change($event)"

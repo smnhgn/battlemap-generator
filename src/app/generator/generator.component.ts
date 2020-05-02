@@ -23,6 +23,7 @@ import { Layer } from '../../models/layer.model';
 export class GeneratorComponent implements OnInit {
   layerList: Layer[];
   @ViewChild('map', { read: MapComponent }) map: MapComponent;
+  deleteDisabled = true;
 
   constructor(
     private layerService: LayerService,
@@ -33,6 +34,7 @@ export class GeneratorComponent implements OnInit {
     this.layerService.layerList$.subscribe((layerList) => {
       // copy array for change-detection
       this.layerList = [...layerList];
+      this.deleteDisabled = this.layerList.every((layer) => !layer.editable);
       this.cd.markForCheck();
       // console.log('update layers', this.layerList);
     });
@@ -71,5 +73,9 @@ export class GeneratorComponent implements OnInit {
 
   export() {
     this.map.export();
+  }
+
+  deleteLayers() {
+    this.layerService.deleteLayers();
   }
 }

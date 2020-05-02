@@ -11,6 +11,15 @@
     <mat-drawer-container class="drawer-container">
       <mat-drawer mode="side" opened>
         <div class="drawer">
+          <button
+            mat-flat-button
+            (click)="deleteLayers()"
+            class="button"
+            color="primary"
+            [disabled]="deleteDisabled"
+          >
+            Delete
+          </button>
           <div class="file-list-container">
             <app-file-list [layerList]="layerList"></app-file-list>
           </div>

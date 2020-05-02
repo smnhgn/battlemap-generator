@@ -37,6 +37,10 @@ export class LayerService {
     this.layerListSubject.next(layerList);
   }
 
+  deleteLayers() {
+    const layerList = this.layerListSubject.value;
+    this.updateList(layerList.filter((layer) => !layer.editable));
+  }
   // layerChange() {
   //   this.layerChangeSubject.next();
   // }
