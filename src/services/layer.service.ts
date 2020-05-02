@@ -29,7 +29,7 @@ export class LayerService {
       rotate: 0,
       editable: false,
     };
-    layerList.push(layer);
+    layerList.unshift(layer);
     this.updateList(layerList);
   }
 

@@ -9,6 +9,7 @@ import {
   QueryList,
   HostListener,
   ChangeDetectorRef,
+  SimpleChanges,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
@@ -99,6 +100,12 @@ export class MapComponent implements AfterViewInit {
   //   return this.groupList.length > 1;
   // }
   constructor(private cd: ChangeDetectorRef) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.layerList.currentValue) {
+      this.layerList = [...changes.layerList.currentValue].reverse();
+    }
+  }
 
   ngAfterViewInit(): void {
     this.panzoom = Panzoom(this.panzoomContainer.nativeElement, {
