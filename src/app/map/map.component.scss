@@ -1,7 +1,6 @@
 :host {
   height: 100%;
   overflow: auto;
-  display: block;
 }
 
 .export-container {
@@ -10,10 +9,29 @@
 
 .export-canvas {
   visibility: hidden;
-  // grid-column-start: 2;
 }
 
 .canvas-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+  overflow: auto;
+}
+
+.ruler-horizontal {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  height: 30px;
+  width: calc(100% - 30px);
+}
+
+.ruler-vertical {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 30px;
+  height: calc(100% - 30px);
 }

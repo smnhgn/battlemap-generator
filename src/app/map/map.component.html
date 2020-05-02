@@ -1,4 +1,6 @@
-<div class="canvas-container" #container>
+<div class="ruler-horizontal" #rulerHorz></div>
+<div class="ruler-vertical" #rulerVert></div>
+<div class="canvas-container" (scroll)="onScroll($event)" #container>
   <ng-container *ngFor="let layer of layerList; let index = index">
     <app-map-item
       [layer]="layer"
@@ -10,7 +12,9 @@
       #mapItem
     ></app-map-item>
   </ng-container>
-  <!-- <ngx-moveable
+  <canvas class="export-canvas" #canvas></canvas>
+</div>
+<!-- <ngx-moveable
     [target]="groupedList"
     [draggable]="true"
     [rotatable]="true"
@@ -27,5 +31,3 @@
     (scaleGroup)="onScaleGroup($event)"
     (scaleGroupEnd)="onScaleGroupEnd($event)"
   ></ngx-moveable> -->
-  <canvas class="export-canvas" #canvas></canvas>
-</div>

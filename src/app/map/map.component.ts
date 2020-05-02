@@ -15,6 +15,7 @@ import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
 import { MapItemComponent } from '../map-item/map-item.component';
 import { Bounds } from '../../models/bounds.model';
 import { NgxMoveableComponent } from 'ngx-moveable';
+import Ruler from '@scena/ruler';
 
 @Component({
   selector: 'app-map',
@@ -42,6 +43,25 @@ export class MapComponent implements AfterViewInit {
 
   bounds: Bounds;
 
+  @ViewChild('rulerHorz')
+  rulerHorzRef: ElementRef<HTMLDivElement>;
+  rulerHorz: Ruler;
+  @ViewChild('rulerVert')
+  rulerVertRef: ElementRef<HTMLDivElement>;
+  rulerVert: Ruler;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.rulerHorz.resize();
+    this.rulerVert.resize();
+  }
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event) {
+    const scrollY = event.target.scrollTop;
+    const scrollX = event.target.scrollLeft;
+    this.rulerHorz.scroll(scrollX);
+    this.rulerVert.scroll(scrollY);
+  }
+
   // get groupList(): Layer[] {
   //   return this.layerList.filter((layer) => layer.editable);
   // }
@@ -52,6 +72,15 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.context = this.canvas.nativeElement.getContext('2d');
+    this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
+      type: 'horizontal',
+      height: 30,
+    });
+    this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
+      type: 'vertical',
+      width: 30,
+    });
+
     merge(this.mapChange$)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
