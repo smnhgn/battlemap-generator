@@ -77,5 +77,6 @@ export class GeneratorComponent implements OnInit {
 
   deleteLayers() {
     this.layerService.deleteLayers();
+    this.map.panzoom.reset();
   }
 }
