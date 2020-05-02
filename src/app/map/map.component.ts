@@ -8,6 +8,7 @@ import {
   ViewChildren,
   QueryList,
   HostListener,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
@@ -16,6 +17,7 @@ import { MapItemComponent } from '../map-item/map-item.component';
 import { Bounds } from '../../models/bounds.model';
 import { NgxMoveableComponent } from 'ngx-moveable';
 import Ruler from '@scena/ruler';
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 
 @Component({
   selector: 'app-map',
@@ -61,7 +63,34 @@ export class MapComponent implements AfterViewInit {
     this.rulerHorz.scroll(scrollX);
     this.rulerVert.scroll(scrollY);
   }
+  @ViewChild('panzoomContainer')
+  panzoomContainer: ElementRef<HTMLDivElement>;
+  panzoom: PanzoomObject;
 
+  @HostListener('mousewheel', ['$event']) onMousewheel(event) {
+    if (!event.shiftKey) return;
+    this.panzoom.zoomWithWheel(event);
+  }
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    if (event.shiftKey && this.panzoom.getOptions().disablePan) {
+      this.panzoom.setOptions({
+        disableZoom: false,
+        disablePan: false,
+        cursor: 'move',
+      });
+    }
+  }
+  @HostListener('window:keyup', ['$event'])
+  onKeyup(event: KeyboardEvent) {
+    if (!this.panzoom.getOptions().disablePan) {
+      this.panzoom.setOptions({
+        disableZoom: true,
+        disablePan: true,
+        cursor: 'default',
+      });
+    }
+  }
   // get groupList(): Layer[] {
   //   return this.layerList.filter((layer) => layer.editable);
   // }
@@ -69,16 +98,47 @@ export class MapComponent implements AfterViewInit {
   // get isGroup() {
   //   return this.groupList.length > 1;
   // }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
+    this.panzoom = Panzoom(this.panzoomContainer.nativeElement, {
+      maxScale: 2,
+      disableZoom: true,
+      disablePan: true,
+      cursor: 'default',
+    });
+    this.panzoomContainer.nativeElement.addEventListener(
+      'panzoomchange',
+      (event: CustomEvent) => {
+        this.mapItems.forEach((mapItem) => mapItem.moveable.updateRect());
+        this.rulerHorz.destroy();
+        this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
+          type: 'horizontal',
+          height: 30,
+          zoom: event.detail.scale,
+          unit: 200,
+        });
+        this.rulerVert.destroy();
+        this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
+          type: 'vertical',
+          width: 30,
+          zoom: event.detail.scale,
+          unit: 200,
+        });
+      }
+    );
     this.context = this.canvas.nativeElement.getContext('2d');
     this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
       type: 'horizontal',
       height: 30,
+      unit: 200,
+      zoom: 1,
     });
     this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
       type: 'vertical',
       width: 30,
+      unit: 200,
+      zoom: 1,
     });
 
     merge(this.mapChange$)

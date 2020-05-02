@@ -1,18 +1,20 @@
 <div class="ruler-horizontal" #rulerHorz></div>
 <div class="ruler-vertical" #rulerVert></div>
-<div class="canvas-container" (scroll)="onScroll($event)" #container>
-  <ng-container *ngFor="let layer of layerList; let index = index">
-    <app-map-item
-      [layer]="layer"
-      [editable]="layer.editable"
-      [index]="index"
-      [bounds]="bounds"
-      [container]="container"
-      (change)="mapItemChange($event)"
-      #mapItem
-    ></app-map-item>
-  </ng-container>
-  <canvas class="export-canvas" #canvas></canvas>
+<div class="canvas-container" #container>
+  <div class="panzoom-container" #panzoomContainer>
+    <ng-container *ngFor="let layer of layerList; let index = index">
+      <app-map-item
+        [layer]="layer"
+        [editable]="layer.editable"
+        [index]="index"
+        [bounds]="bounds"
+        [container]="panzoomContainer"
+        (change)="mapItemChange($event)"
+        #mapItem
+      ></app-map-item>
+    </ng-container>
+    <canvas class="export-canvas" #canvas></canvas>
+  </div>
 </div>
 <!-- <ngx-moveable
     [target]="groupedList"
