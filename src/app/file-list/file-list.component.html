@@ -5,7 +5,7 @@
   (cdkDropListDropped)="dropped($event)"
 >
   <div *ngFor="let layer of layerList" class="file-item" cdkDrag>
-    <mat-icon class="drag-handle" cdkDragHandle>drag_handle</mat-icon>
+    <mat-icon class="drag-handle">drag_handle</mat-icon>
     <span class="text">{{ layer.name }}</span>
     <mat-checkbox
       [(ngModel)]="layer.editable"
