@@ -4,6 +4,8 @@
   <div class="panzoom-container" #panzoomContainer>
     <ng-container *ngFor="let layer of layerList; let index = index">
       <app-map-item
+        class="map-item"
+        [class.editable]="layer.editable"
         [layer]="layer"
         [editable]="layer.editable"
         [index]="index"
