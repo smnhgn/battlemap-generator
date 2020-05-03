@@ -7,6 +7,9 @@
   <div *ngFor="let layer of layerList" class="file-item" cdkDrag>
     <mat-icon class="drag-handle">drag_handle</mat-icon>
     <span class="text">{{ layer.name }}</span>
+    <button mat-icon-button (click)="duplicateLayer(layer)">
+      <mat-icon>note_add</mat-icon>
+    </button>
     <mat-checkbox
       [(ngModel)]="layer.editable"
       (change)="change($event)"

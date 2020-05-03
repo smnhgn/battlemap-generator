@@ -33,6 +33,13 @@ export class LayerService {
     this.updateList(layerList);
   }
 
+  async duplicateLayer(layer: Layer) {
+    layer = { ...layer };
+    const layerList = this.layerListSubject.value;
+    layerList.unshift(layer);
+    this.updateList(layerList);
+  }
+
   updateList(layerList: Layer[]) {
     this.layerListSubject.next(layerList);
   }

@@ -30,4 +30,9 @@ export class FileListComponent implements OnInit {
   change(event: MatSliderChange) {
     this.layerService.updateList(this.layerList);
   }
+
+  duplicateLayer(layer: Layer) {
+    console.log('duplicateLayer', layer);
+    this.layerService.duplicateLayer(layer);
+  }
 }
