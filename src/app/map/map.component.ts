@@ -105,6 +105,8 @@ export class MapComponent implements AfterViewInit {
     this.initPanzoom();
 
     this.context = this.canvas.nativeElement.getContext('2d');
+    const { offsetWidth, offsetHeight } = this.panzoomContainer.nativeElement;
+    this.bounds = { top: 0, right: offsetWidth, bottom: offsetHeight, left: 0 };
 
     merge(this.mapChange$)
       .pipe(takeUntil(this.destroy$))
@@ -114,10 +116,10 @@ export class MapComponent implements AfterViewInit {
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
         // set bounds
-        const bounds = { top: 0, right: width, bottom: height, left: 0 };
-        if (this.shouldBoundsUpdate(this.bounds, bounds)) {
-          this.bounds = bounds;
-        }
+        // const bounds = { top: 0, right: width, bottom: height, left: 0 };
+        // if (this.shouldBoundsUpdate(this.bounds, bounds)) {
+        //   this.bounds = bounds;
+        // }
 
         // clear canvas
         this.context.clearRect(0, 0, width, height);
@@ -227,15 +229,15 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private shouldBoundsUpdate(oldBounds: Bounds, newBounds: Bounds) {
-    const shouldUpdate =
-      !oldBounds ||
-      newBounds.top !== oldBounds.top ||
-      newBounds.right !== oldBounds.right ||
-      newBounds.bottom !== oldBounds.bottom ||
-      newBounds.left !== oldBounds.left;
-    return shouldUpdate;
-  }
+  // private shouldBoundsUpdate(oldBounds: Bounds, newBounds: Bounds) {
+  //   const shouldUpdate =
+  //     !oldBounds ||
+  //     newBounds.top !== oldBounds.top ||
+  //     newBounds.right !== oldBounds.right ||
+  //     newBounds.bottom !== oldBounds.bottom ||
+  //     newBounds.left !== oldBounds.left;
+  //   return shouldUpdate;
+  // }
 
   // private getBounds(bbox: DOMRect): Bounds {
   //   let { top, right, bottom, left } = bbox;
