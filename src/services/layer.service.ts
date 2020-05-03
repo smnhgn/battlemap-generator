@@ -27,7 +27,7 @@ export class LayerService {
       y: 0,
       scale: [1, 1],
       rotate: 0,
-      editable: false,
+      editable: true,
     };
     layerList.unshift(layer);
     this.updateList(layerList);
