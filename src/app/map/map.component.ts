@@ -57,13 +57,6 @@ export class MapComponent implements AfterViewInit {
     this.rulerHorz.resize();
     this.rulerVert.resize();
   }
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event) {
-    const scrollY = event.target.scrollTop;
-    const scrollX = event.target.scrollLeft;
-    this.rulerHorz.scroll(scrollX);
-    this.rulerVert.scroll(scrollY);
-  }
   @ViewChild('panzoomContainer')
   panzoomContainer: ElementRef<HTMLDivElement>;
   panzoom: PanzoomObject;
@@ -108,45 +101,10 @@ export class MapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.panzoom = Panzoom(this.panzoomContainer.nativeElement, {
-      maxScale: 2,
-      disableZoom: true,
-      disablePan: true,
-      cursor: 'default',
-    });
-    this.panzoomContainer.nativeElement.addEventListener(
-      'panzoomchange',
-      (event: CustomEvent) => {
-        this.mapItems.forEach((mapItem) => mapItem.moveable.updateRect());
-        this.rulerHorz.destroy();
-        this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
-          type: 'horizontal',
-          height: 30,
-          zoom: event.detail.scale,
-          unit: 200,
-        });
-        this.rulerVert.destroy();
-        this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
-          type: 'vertical',
-          width: 30,
-          zoom: event.detail.scale,
-          unit: 200,
-        });
-      }
-    );
+    this.initRuler();
+    this.initPanzoom();
+
     this.context = this.canvas.nativeElement.getContext('2d');
-    this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
-      type: 'horizontal',
-      height: 30,
-      unit: 200,
-      zoom: 1,
-    });
-    this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
-      type: 'vertical',
-      width: 30,
-      unit: 200,
-      zoom: 1,
-    });
 
     merge(this.mapChange$)
       .pipe(takeUntil(this.destroy$))
@@ -171,6 +129,47 @@ export class MapComponent implements AfterViewInit {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  initRuler() {
+    this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
+      type: 'horizontal',
+      direction: 'start',
+      height: 30,
+      unit: 200,
+      zoom: 1,
+    });
+    this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
+      type: 'vertical',
+      direction: 'start',
+      width: 30,
+      unit: 200,
+      zoom: 1,
+    });
+  }
+
+  initPanzoom() {
+    this.panzoom = Panzoom(this.panzoomContainer.nativeElement, {
+      maxScale: 2,
+      disableZoom: true,
+      disablePan: true,
+      cursor: 'default',
+    });
+    this.panzoomContainer.nativeElement.addEventListener(
+      'panzoomchange',
+      (event: CustomEvent) => {
+        const { x, y, scale } = event.detail;
+        const scrollY = -y;
+        const scrollX = -x;
+        (this.rulerVert as any).zoom = scale;
+        (this.rulerHorz as any).zoom = scale;
+        const { offsetWidth, offsetHeight } = event.target as HTMLElement;
+        const diffX = (offsetWidth - offsetWidth * scale) / 2 / scale;
+        const diffY = (offsetHeight - offsetHeight * scale) / 2 / scale;
+        this.rulerHorz.scroll(scrollX - diffX);
+        this.rulerVert.scroll(scrollY - diffY);
+      }
+    );
   }
 
   mapItemChange(event: {
