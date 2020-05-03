@@ -135,14 +135,14 @@ export class MapComponent implements AfterViewInit {
     this.rulerHorz = new Ruler(this.rulerHorzRef.nativeElement, {
       type: 'horizontal',
       direction: 'start',
-      height: 30,
+      height: 40,
       unit: 200,
       zoom: 1,
     });
     this.rulerVert = new Ruler(this.rulerVertRef.nativeElement, {
       type: 'vertical',
       direction: 'start',
-      width: 30,
+      width: 40,
       unit: 200,
       zoom: 1,
     });
@@ -170,6 +170,10 @@ export class MapComponent implements AfterViewInit {
         this.rulerVert.scroll(scrollY - diffY);
       }
     );
+  }
+
+  panzoomReset() {
+    this.panzoom.reset();
   }
 
   mapItemChange(event: {
