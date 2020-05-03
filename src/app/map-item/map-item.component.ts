@@ -41,11 +41,7 @@ export class MapItemComponent implements AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     // trigger change
     if (this.canvas) {
-      this.change.emit({
-        layer: this.layer,
-        canvas: this.canvas.nativeElement,
-        moveable: this.moveable,
-      });
+      this.onChange(this.layer);
     }
   }
 
@@ -56,22 +52,14 @@ export class MapItemComponent implements AfterViewInit {
     this.context.clearRect(0, 0, width, height);
     this.context.drawImage(this.layer.img, 0, 0);
     // trigger change
-    this.change.emit({
-      layer: this.layer,
-      canvas: this.canvas.nativeElement,
-      moveable: this.moveable,
-    });
+    this.onChange(this.layer);
   }
 
   onRotate({ transform, target, delta }, layer: Layer) {
     layer.rotate += delta;
     target!.style.transform = transform;
     // trigger change
-    this.change.emit({
-      layer,
-      canvas: this.canvas.nativeElement,
-      moveable: this.moveable,
-    });
+    this.onChange(layer);
   }
 
   onDrag({ transform, target, left, top }, layer: Layer) {
@@ -81,11 +69,7 @@ export class MapItemComponent implements AfterViewInit {
     target.style.top = top + 'px';
     // target!.style.transform = transform;
     // trigger change
-    this.change.emit({
-      layer,
-      canvas: this.canvas.nativeElement,
-      moveable: this.moveable,
-    });
+    this.onChange(layer);
   }
 
   onScale({ transform, target, delta }, layer: Layer) {
@@ -95,10 +79,15 @@ export class MapItemComponent implements AfterViewInit {
     layer.height = layer.img.height * layer.scale[1];
     target!.style.transform = transform;
     // trigger change
+    this.onChange(layer);
+  }
+
+  onChange(layer: Layer) {
     this.change.emit({
       layer,
       canvas: this.canvas.nativeElement,
       moveable: this.moveable,
     });
+    this.moveable.updateRect();
   }
 }
