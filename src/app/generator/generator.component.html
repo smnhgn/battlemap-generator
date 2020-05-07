@@ -48,6 +48,8 @@
       <mat-drawer-content>
         <div class="drop-overlay" *ngIf="layerList?.length === 0">
           <h1>Drop Images Here</h1>
+          <h3>Shift + Mouse to pan</h3>
+          <h3>Shift + Mousewheel to zoom</h3>
           <button mat-flat-button (click)="openFileSelector()" color="primary">
             Browse Files
           </button>
