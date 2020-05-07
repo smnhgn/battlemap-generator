@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { Layer } from '../../models/layer.model';
 import { Subject, merge } from 'rxjs';
-import { debounceTime, takeUntil, shareReplay } from 'rxjs/operators';
+import { debounceTime, takeUntil, shareReplay, tap } from 'rxjs/operators';
 import { MapItemComponent } from '../map-item/map-item.component';
 import { Bounds } from '../../models/bounds.model';
 import { NgxMoveableComponent } from 'ngx-moveable';
@@ -38,12 +38,13 @@ export class MapComponent implements AfterViewInit {
 
   @ViewChildren('mapItem', { read: MapItemComponent })
   mapItems: QueryList<MapItemComponent>;
-  mapItemsGroup: HTMLCanvasElement[];
+  mapItemsGroupLayers: Layer[];
+  mapItemsGroupCanvases: HTMLCanvasElement[];
 
   private mapChangeSubject = new Subject();
   mapChange$ = this.mapChangeSubject
     .asObservable()
-    .pipe(debounceTime(100), shareReplay(1));
+    .pipe(debounceTime(10), shareReplay(1));
 
   bounds: Bounds;
 
@@ -86,13 +87,7 @@ export class MapComponent implements AfterViewInit {
       });
     }
   }
-  // get groupList(): Layer[] {
-  //   return this.layerList.filter((layer) => layer.editable);
-  // }
 
-  // get isGroup() {
-  //   return this.groupList.length > 1;
-  // }
   constructor(private cd: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -110,7 +105,19 @@ export class MapComponent implements AfterViewInit {
     this.bounds = { top: 0, right: offsetWidth, bottom: offsetHeight, left: 0 };
 
     merge(this.mapChange$)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => {
+          const mapItemsGroup = this.mapItems.filter(
+            (item) => item.layer.editable
+          );
+          this.mapItemsGroupLayers = mapItemsGroup.map((item) => item.layer);
+          this.mapItemsGroupCanvases = mapItemsGroup.map(
+            (item) => item.canvas.nativeElement
+          );
+        }),
+        debounceTime(10)
+      )
       .subscribe(() => {
         // set canvas size
         const { width, height } = this.getCanvasSize(this.mapItems.toArray());
@@ -127,10 +134,6 @@ export class MapComponent implements AfterViewInit {
         // update canvas
         this.drawImages(this.mapItems.toArray());
 
-        // add group targets
-        this.mapItemsGroup = this.mapItems
-          .filter((item) => item.layer.editable)
-          .map((item) => item.canvas.nativeElement);
         this.cd.markForCheck();
       });
   }
@@ -329,42 +332,57 @@ export class MapComponent implements AfterViewInit {
   //   // set(layer.scale);
   // }
 
-  onRotateGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
+  onRotateGroup({ targets, events }, layers: Layer[]) {
+    events.forEach(({ target, transform, delta }, i) => {
+      const layer = layers[i];
+      layer.rotate += delta;
       target!.style.transform = transform;
     });
   }
 
-  onRotateGroupEnd({ targets }) {
+  onRotateGroupEnd({ targets }, layers: Layer[]) {
     // this.moveableList.forEach((moveable) => {
     //   // moveable.updateRect();
     //   this.canvasChangeSubject.next();
     // });
+    this.mapChangeSubject.next();
   }
 
-  onDragGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
+  onDragGroup({ targets, events }, layers: Layer[]) {
+    events.forEach(({ target, transform, left, top }, i) => {
+      const layer = layers[i];
+      layer.x = left;
+      layer.y = top;
+      target.style.left = left + 'px';
+      target.style.top = top + 'px';
+      // target!.style.transform = transform;
+    });
+  }
+
+  onDragGroupEnd({ targets }, layers: Layer[]) {
+    // this.moveableList.forEach((moveable) => {
+    //   // moveable.updateRect();
+    //   this.canvasChangeSubject.next();
+    // });
+    this.mapChangeSubject.next();
+  }
+
+  onScaleGroup({ targets, events }, layers: Layer[]) {
+    events.forEach(({ target, transform, delta }, i) => {
+      const layer = layers[i];
+      layer.scale[0] *= delta[0];
+      layer.scale[1] *= delta[1];
+      layer.width = layer.img.width * layer.scale[0];
+      layer.height = layer.img.height * layer.scale[1];
       target!.style.transform = transform;
     });
   }
 
-  onDragGroupEnd({ targets }) {
+  onScaleGroupEnd({ targets }, layers: Layer[]) {
     // this.moveableList.forEach((moveable) => {
     //   // moveable.updateRect();
     //   this.canvasChangeSubject.next();
     // });
-  }
-
-  onScaleGroup({ targets, events }) {
-    events.forEach(({ target, transform }, i) => {
-      target!.style.transform = transform;
-    });
-  }
-
-  onScaleGroupEnd({ targets }) {
-    // this.moveableList.forEach((moveable) => {
-    //   // moveable.updateRect();
-    //   this.canvasChangeSubject.next();
-    // });
+    this.mapChangeSubject.next();
   }
 }
