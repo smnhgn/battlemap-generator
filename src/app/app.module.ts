@@ -23,6 +23,7 @@ import { MapComponent } from './map/map.component';
 import { FormsModule } from '@angular/forms';
 import { NgxMoveableModule } from 'ngx-moveable';
 import { MapItemComponent } from './map-item/map-item.component';
+import { IsGroupPipe } from '../pipes/is-group.pipe';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { MapItemComponent } from './map-item/map-item.component';
     FileListComponent,
     MapComponent,
     MapItemComponent,
+    IsGroupPipe,
   ],
   imports: [
     FormsModule,

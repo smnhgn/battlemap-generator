@@ -10,7 +10,7 @@
         class="map-item"
         [class.editable]="layer.editable"
         [layer]="layer"
-        [editable]="layer.editable"
+        [editable]="layer.editable && !(layerList | isGroup)"
         [index]="index"
         [bounds]="bounds"
         [container]="panzoomContainer"
@@ -21,20 +21,22 @@
     <canvas class="export-canvas" #canvas></canvas>
   </div>
 </div>
-<!-- <ngx-moveable
-    [target]="groupedList"
-    [draggable]="true"
-    [rotatable]="true"
-    [scalable]="true"
-    [throttleRotate]="0"
-    rotationPosition="top"
-    (rotateGroup)="onRotateGroup($event)"
-    (rotateGroupEnd)="onRotateGroupEnd($event)"
-    [throttleDrag]="0"
-    (dragGroup)="onDragGroup($event)"
-    (dragGroupEnd)="onDragGroupEnd($event)"
-    [keepRatio]="true"
-    [origin]="false"
-    (scaleGroup)="onScaleGroup($event)"
-    (scaleGroupEnd)="onScaleGroupEnd($event)"
-  ></ngx-moveable> -->
+<ngx-moveable
+  *ngIf="layerList | isGroup"
+  [target]="mapItemsGroup"
+  [draggable]="true"
+  [rotatable]="true"
+  [scalable]="true"
+  [className]="'editable'"
+  [throttleRotate]="0"
+  rotationPosition="top"
+  (rotateGroup)="onRotateGroup($event)"
+  (rotateGroupEnd)="onRotateGroupEnd($event)"
+  [throttleDrag]="0"
+  (dragGroup)="onDragGroup($event)"
+  (dragGroupEnd)="onDragGroupEnd($event)"
+  [keepRatio]="true"
+  [origin]="false"
+  (scaleGroup)="onScaleGroup($event)"
+  (scaleGroupEnd)="onScaleGroupEnd($event)"
+></ngx-moveable>

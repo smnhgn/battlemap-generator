@@ -38,6 +38,7 @@ export class MapComponent implements AfterViewInit {
 
   @ViewChildren('mapItem', { read: MapItemComponent })
   mapItems: QueryList<MapItemComponent>;
+  mapItemsGroup: HTMLCanvasElement[];
 
   private mapChangeSubject = new Subject();
   mapChange$ = this.mapChangeSubject
@@ -125,6 +126,12 @@ export class MapComponent implements AfterViewInit {
         this.context.clearRect(0, 0, width, height);
         // update canvas
         this.drawImages(this.mapItems.toArray());
+
+        // add group targets
+        this.mapItemsGroup = this.mapItems
+          .filter((item) => item.layer.editable)
+          .map((item) => item.canvas.nativeElement);
+        this.cd.markForCheck();
       });
   }
 
@@ -322,42 +329,42 @@ export class MapComponent implements AfterViewInit {
   //   // set(layer.scale);
   // }
 
-  // onRotateGroup({ targets, events }) {
-  //   events.forEach(({ target, transform }, i) => {
-  //     target!.style.transform = transform;
-  //   });
-  // }
+  onRotateGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
 
-  // onRotateGroupEnd({ targets }) {
-  //   // this.moveableList.forEach((moveable) => {
-  //   //   // moveable.updateRect();
-  //   //   this.canvasChangeSubject.next();
-  //   // });
-  // }
+  onRotateGroupEnd({ targets }) {
+    // this.moveableList.forEach((moveable) => {
+    //   // moveable.updateRect();
+    //   this.canvasChangeSubject.next();
+    // });
+  }
 
-  // onDragGroup({ targets, events }) {
-  //   events.forEach(({ target, transform }, i) => {
-  //     target!.style.transform = transform;
-  //   });
-  // }
+  onDragGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
 
-  // onDragGroupEnd({ targets }) {
-  //   // this.moveableList.forEach((moveable) => {
-  //   //   // moveable.updateRect();
-  //   //   this.canvasChangeSubject.next();
-  //   // });
-  // }
+  onDragGroupEnd({ targets }) {
+    // this.moveableList.forEach((moveable) => {
+    //   // moveable.updateRect();
+    //   this.canvasChangeSubject.next();
+    // });
+  }
 
-  // onScaleGroup({ targets, events }) {
-  //   events.forEach(({ target, transform }, i) => {
-  //     target!.style.transform = transform;
-  //   });
-  // }
+  onScaleGroup({ targets, events }) {
+    events.forEach(({ target, transform }, i) => {
+      target!.style.transform = transform;
+    });
+  }
 
-  // onScaleGroupEnd({ targets }) {
-  //   // this.moveableList.forEach((moveable) => {
-  //   //   // moveable.updateRect();
-  //   //   this.canvasChangeSubject.next();
-  //   // });
-  // }
+  onScaleGroupEnd({ targets }) {
+    // this.moveableList.forEach((moveable) => {
+    //   // moveable.updateRect();
+    //   this.canvasChangeSubject.next();
+    // });
+  }
 }

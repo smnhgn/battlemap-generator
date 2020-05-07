@@ -88,6 +88,6 @@ export class MapItemComponent implements AfterViewInit {
       canvas: this.canvas.nativeElement,
       moveable: this.moveable,
     });
-    this.moveable.updateRect();
+    this.moveable?.updateRect();
   }
 }

@@ -7,11 +7,12 @@
 </canvas>
 <ngx-moveable
   #moveable
+  *ngIf="editable"
   [target]="canvas"
   [container]="container"
   [snappable]="true"
   [bounds]="bounds"
-  [className]="editable ? 'editable' : ''"
+  [className]="'editable'"
   [draggable]="editable"
   [rotatable]="editable"
   [scalable]="editable"

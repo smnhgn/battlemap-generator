@@ -27,17 +27,25 @@ body {
   height: 100%;
 }
 
-.moveable-control-box.editable .moveable-line.moveable-direction {
-  display: block;
-}
-
-.moveable-control-box .moveable-guideline {
+.moveable-control-box:not(.editable) .moveable-line.moveable-direction {
   display: none;
 }
 
-.moveable-control-box .moveable-line.moveable-direction {
-  display: none;
-}
+// .moveable-control-box.editable .moveable-line.moveable-direction {
+//   display: block;
+// }
+
+// .moveable-control-box .moveable-guideline {
+//   display: none;
+// }
+
+// .group-moveable .moveable-line.moveable-direction {
+//   display: none;
+// }
+
+// .moveable-control-box:not(.group-moveable) .moveable-line.moveable-direction {
+//   display: none;
+// }
 
 //   display: grid;
 //   grid-template-areas: "aside main";
